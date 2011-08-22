@@ -1,0 +1,15 @@
+[ui]
+username = Ian Henry <ianthehenry@gmail.com>
+ignore = ~/.hgignore_global
+
+[hostfingerprints]
+ianhenry.kilnhg.com = fe:ab:65:89:7c:6f:1a:21:a8:39:54:6c:2a:cb:ca:ae:e9:e5:f0:01
+bitbucket.org = 81:2b:08:90:dc:d3:71:ee:e0:7c:b4:75:ce:9b:6c:48:94:56:a1:fe
+
+[extensions]
+kilnauth = ~/.hgext/kilnauth.py
+color =
+
+[auth]
+kiln.prefix = https://ianhenry.kilnhg.com/
+kiln.username = ianthehenry@gmail.com
