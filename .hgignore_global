@@ -5,3 +5,4 @@ syntax: glob
 *.sublime-project
 node_modules/*
 out/*
+*.cache
