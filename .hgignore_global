@@ -2,7 +2,7 @@ syntax: glob
 
 *~
 .DS_Store
-*.sublime-project
+*.sublime-workspace
 node_modules/*
 out/*
 *.cache
