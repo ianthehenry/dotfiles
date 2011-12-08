@@ -1,3 +1,5 @@
 [user]
 	name = Ian Henry
 	email = ianthehenry@gmail.com
+[core]
+	editor = nano
