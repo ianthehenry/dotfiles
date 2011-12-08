@@ -6,4 +6,5 @@ alias la="ls -A"
 alias cd..="cd .."
 alias sdiff="hg diff -g > /tmp/hg.diff ; subl /tmp/hg.diff"
 alias subl='/Applications/Sublime\ Text\ 2.app/Contents/SharedSupport/bin/subl'
+alias subl.='subl .'
 shopt -s extglob
