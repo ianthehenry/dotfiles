@@ -7,4 +7,5 @@ alias cd..="cd .."
 alias sdiff="hg diff -g > /tmp/hg.diff ; subl /tmp/hg.diff"
 alias subl='/Applications/Sublime\ Text\ 2.app/Contents/SharedSupport/bin/subl'
 alias subl.='subl .'
+alias lust='ssh ian@lust.cs.utexas.edu'
 shopt -s extglob
