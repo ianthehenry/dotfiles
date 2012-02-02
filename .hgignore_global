@@ -6,3 +6,4 @@ syntax: glob
 node_modules/*
 out/*
 *.cache
+*.pyc
