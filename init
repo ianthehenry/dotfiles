@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+
+ln .hgrc ~
+ln .bashrc ~
+ln .bash_profile ~
+ln .gitconfig ~
+ln .hgignore_global ~
