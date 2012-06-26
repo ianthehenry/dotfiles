@@ -3,3 +3,5 @@
 	email = ianthehenry@gmail.com
 [core]
 	editor = nano
+[credential]
+	helper = osxkeychain
