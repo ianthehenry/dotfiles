@@ -5,3 +5,4 @@ ln .bashrc ~
 ln .bash_profile ~
 ln .gitconfig ~
 ln .hgignore_global ~
+ln config.fish ~/.config/fish/
