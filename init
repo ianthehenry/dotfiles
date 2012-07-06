@@ -4,5 +4,6 @@ ln -s .hgrc ~
 ln -s .bashrc ~
 ln -s .bash_profile ~
 ln -s .gitconfig ~
+ln -s .vimrc ~
 ln -s .hgignore_global ~
 ln -s config.fish ~/.config/fish/

@@ -1,0 +1,11 @@
+set nocompatible
+syntax on
+set relativenumber
+set autoindent
+filetype on
+set nobackup
+set tabstop=4
+set shiftwidth=4
+set expandtab
+set background=dark
+colorscheme solarized
