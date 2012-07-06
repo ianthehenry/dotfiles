@@ -1,8 +1,8 @@
 #!/usr/bin/env sh
 
-ln .hgrc ~
-ln .bashrc ~
-ln .bash_profile ~
-ln .gitconfig ~
-ln .hgignore_global ~
-ln config.fish ~/.config/fish/
+ln -s .hgrc ~
+ln -s .bashrc ~
+ln -s .bash_profile ~
+ln -s .gitconfig ~
+ln -s .hgignore_global ~
+ln -s config.fish ~/.config/fish/
