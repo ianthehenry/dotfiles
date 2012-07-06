@@ -1,9 +1,9 @@
 #!/usr/bin/env sh
 
-ln -s .hgrc ~
-ln -s .bashrc ~
-ln -s .bash_profile ~
-ln -s .gitconfig ~
-ln -s .vimrc ~
-ln -s .hgignore_global ~
-ln -s config.fish ~/.config/fish/
+ln -s $PWD/.hgrc ~
+ln -s $PWD/.bashrc ~
+ln -s $PWD/.bash_profile ~
+ln -s $PWD/.gitconfig ~
+ln -s $PWD/.vimrc ~
+ln -s $PWD/.hgignore_global ~
+ln -s $PWD/config.fish ~/.config/fish/
