@@ -1,4 +1,4 @@
-set PATH ""/usr/local/bin:/usr/local/sbin:/usr/local/share/npm/bin:/usr/local/git/bin:$PATH""
+set PATH /usr/local/bin /usr/bin /usr/sbin /bin /sbin /usr/X11R6/bin
 set NODE_PATH ""/usr/local/lib/node_modules""
 set VISUAL ""subl -w""
 
