@@ -10,4 +10,6 @@ alias ..="cd .."
 alias sdiff="hg diff -g > /tmp/hg.diff ; subl /tmp/hg.diff"
 alias subl.='subl .'
 alias lust='ssh ian@lust.cs.utexas.edu'
+alias xcode='open Trellis.xcodeproj'
 shopt -s extglob
+

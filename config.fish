@@ -10,6 +10,10 @@ function lust
 	ssh ian@lust.cs.utexas.edu $argv
 end;
 
+function xcode
+    open Trellis.xcodeproj
+end;
+
 function ls --description 'List contents of directory'
   command ls -F $argv
 end;
