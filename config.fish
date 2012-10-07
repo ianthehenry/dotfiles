@@ -1,6 +1,6 @@
 set PATH /usr/local/bin /usr/bin /usr/sbin /bin /sbin /usr/X11R6/bin
-set NODE_PATH ""/usr/local/lib/node_modules""
-set VISUAL ""subl -w""
+set NODE_PATH /usr/local/lib/node_modules
+set VISUAL "subl -w"
 
 function subl.
 	subl . $argv
