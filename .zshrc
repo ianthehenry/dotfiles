@@ -16,6 +16,7 @@ alias ll="ls -lAh"
 alias la="ls -A"
 alias sdiff="hg diff -g > /tmp/hg.diff ; subl /tmp/hg.diff"
 alias subl.='subl .'
+alias xcode='open *.xcodeproj'
 
 # Comment this out to disable weekly auto-update checks
 # DISABLE_AUTO_UPDATE="true"
@@ -28,3 +29,4 @@ DISABLE_LS_COLORS="true"
 plugins=(git brew cake autojump mercurial npm sublime)
 
 source $ZSH/oh-my-zsh.sh
+source $HOME/src/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
