@@ -1,6 +1,6 @@
-set PATH ""/usr/local/bin:/usr/local/sbin:/usr/local/share/npm/bin:/usr/local/git/bin:$PATH""
-set NODE_PATH ""/usr/local/lib/node_modules""
-set VISUAL ""subl -w""
+set PATH /usr/local/bin /usr/bin /usr/sbin /bin /sbin /usr/X11R6/bin
+set NODE_PATH /usr/local/lib/node_modules
+set VISUAL "subl -w"
 
 function subl.
 	subl . $argv
@@ -8,6 +8,10 @@ end;
 
 function lust
 	ssh ian@lust.cs.utexas.edu $argv
+end;
+
+function xcode
+    open Trellis.xcodeproj
 end;
 
 function ls --description 'List contents of directory'
