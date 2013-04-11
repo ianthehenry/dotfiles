@@ -7,7 +7,7 @@ ZSH=$HOME/.oh-my-zsh
 # time that oh-my-zsh is loaded.
 ZSH_THEME="ian"
 
-PATH="/usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin:/usr/local/share/npm/bin"
+PATH="/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:/usr/local/share/npm/bin"
 NODE_PATH="/usr/local/lib/node_modules"
 VISUAL="subl -w"
 
