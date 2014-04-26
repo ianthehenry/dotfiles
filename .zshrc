@@ -33,3 +33,4 @@ source $ZSH/oh-my-zsh.sh
 source $HOME/src/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 unalias gm # because graphicsmagick
+unsetopt HIST_VERIFY
