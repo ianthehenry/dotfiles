@@ -7,6 +7,7 @@
   ff = merge --ff-only
 [core]
 	editor = "subl --wait"
+	excludesfile = "~/.gitignore_global"
 [credential]
 	helper = osxkeychain
 [alias]
