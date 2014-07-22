@@ -5,8 +5,6 @@ DISABLE_LS_COLORS="true"
 plugins=(brew cake autojump mercurial npm sublime zsh-syntax-highlighting)
 source $ZSH/oh-my-zsh.sh
 
-
-
 unsetopt HIST_VERIFY
 setopt extendedglob
 export PATH="$HOME/.cask/bin:$HOME/.cabal/bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:/usr/local/share/npm/bin"

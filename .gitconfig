@@ -1,6 +1,10 @@
 [user]
 	name = Ian Henry
 	email = ianthehenry@gmail.com
+[alias]
+  st = status --short --branch
+  hist = log --oneline --decorate --graph --topo-order --max-count=20
+  ff = merge --ff-only
 [core]
 	editor = "subl --wait"
 [credential]
