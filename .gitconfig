@@ -2,6 +2,22 @@
 	name = Ian Henry
 	email = ianthehenry@gmail.com
 [core]
-	editor = nano
+	editor = "subl --wait"
 [credential]
 	helper = osxkeychain
+[alias]
+    ff = merge --ff-only @{u}
+    hist = log --oneline --decorate --graph --topo-order
+    st = status --short --branch
+    com = commit
+    heads = for-each-ref --sort=-committerdate refs/heads/ --format='%(committerdate:short) %(authorname) %(refname:short)'
+    pushup = "!f(){ git push --set-upstream $1 $(git rev-parse --abbrev-ref HEAD); }; f"
+[push]
+	default = upstream
+[color]
+    ui = auto
+[diff]
+    algorithm = patience
+[filter "media"]
+	clean = git-media-clean %f
+	smudge = git-media-smudge %f
