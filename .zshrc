@@ -18,6 +18,7 @@ alias subl.='subl .'
 alias xcode='open *.xcworkspace'
 alias emacs='open -a Emacs'
 alias s='source ~/.zshrc'
+alias c='cabal install -j --only-dependencies'
 
 sd() {
     git diff "$@" > /tmp/git.diff
