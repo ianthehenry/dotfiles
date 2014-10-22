@@ -17,6 +17,11 @@
     com = commit
     heads = for-each-ref --sort=-committerdate refs/heads/ --format='%(committerdate:short) %(authorname) %(refname:short)'
     pushup = "!f(){ git push --set-upstream $1 $(git rev-parse --abbrev-ref HEAD); }; f"
+    pushupf = "!f(){ git push -f --set-upstream $1 $(git rev-parse --abbrev-ref HEAD); }; f"
+    serve = daemon --reuseaddr --base-path=. --export-all --verbose
+    tsk = blame
+    whisk = rebase
+    m = merge --no-ff
 [push]
 	default = upstream
 [color]
