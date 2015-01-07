@@ -15,6 +15,9 @@
 (evil-surround-mode)
 (evil-set-initial-state 'haskell-interactive 'insert)
 
+(when (memq window-system '(mac ns))
+  (exec-path-from-shell-initialize))
+
 (set-keyboard-coding-system 'utf-8-unix)
 (prefer-coding-system 'utf-8-unix)
 (windmove-default-keybindings)
