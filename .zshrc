@@ -18,7 +18,7 @@ alias subl.='subl .'
 alias xcode='open *.xcworkspace'
 alias emacs='open -a Emacs'
 alias s='source ~/.zshrc'
-alias c='cabal install -j --only-dependencies'
+alias c='cabal install -j --only-dependencies --enable-tests'
 alias done='terminal-notifier -message "done"'
 
 sd() {
