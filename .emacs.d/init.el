@@ -13,6 +13,7 @@
 
 (evil-mode)
 (evil-surround-mode)
+(evil-set-initial-state 'haskell-interactive 'insert)
 
 (set-keyboard-coding-system 'utf-8-unix)
 (prefer-coding-system 'utf-8-unix)
