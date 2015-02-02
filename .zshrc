@@ -11,6 +11,10 @@ export PATH="$HOME/.cask/bin:$HOME/.cabal/bin:/usr/local/bin:/usr/local/sbin:/us
 
 export VISUAL="subl -w"
 
+"="() {
+  echo "$@" | bc
+}
+
 alias ls="ls -Fx"
 alias ll="ls -lAh"
 alias la="ls -A"
