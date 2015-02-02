@@ -23,7 +23,7 @@ alias xcode='open *.xcworkspace'
 alias emacs='open -a Emacs'
 alias s='source ~/.zshrc'
 alias c='cabal install -j --only-dependencies --enable-tests'
-alias done='terminal-notifier -message "done"'
+alias d='terminal-notifier -message "done"'
 
 sd() {
     git diff "$@" > /tmp/git.diff
