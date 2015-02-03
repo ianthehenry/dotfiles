@@ -30,15 +30,15 @@ fix() {
 }
 
 sd() {
-    git diff "$@" > /tmp/git.diff
-    subl /tmp/git.diff
+  git diff "$@" > /tmp/git.diff
+  subl /tmp/git.diff
 }
 
 sdc() {
-    git diff --cached "$@" > /tmp/git.diff
-    subl /tmp/git.diff
+  git diff --cached "$@" > /tmp/git.diff
+  subl /tmp/git.diff
 }
 
 jf() {
-    pbpaste | jq '.' | pbcopy
+  pbpaste | jq '.' | pbcopy
 }
