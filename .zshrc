@@ -25,6 +25,10 @@ alias s='source ~/.zshrc'
 alias c='cabal install -j --only-dependencies --enable-tests'
 alias d='terminal-notifier -message "done"'
 
+fix() {
+  git commit $@ --fixup "$(git log --oneline --topo-order --decorate -n30 | fzf --reverse | awk '{print $1}')"
+}
+
 sd() {
     git diff "$@" > /tmp/git.diff
     subl /tmp/git.diff
