@@ -1,17 +1,13 @@
 [user]
 	name = Ian Henry
 	email = ianthehenry@gmail.com
-[alias]
-  st = status --short --branch
-  hist = log --oneline --decorate --graph --topo-order --max-count=20
-  ff = merge --ff-only
-  git = !git
 [core]
 	editor = "subl --wait"
 	excludesfile = "~/.gitignore_global"
 [credential]
 	helper = osxkeychain
 [alias]
+    git = !git
     ff = merge --ff-only @{u}
     hist = log --oneline --decorate --graph --topo-order
     st = status --short --branch
