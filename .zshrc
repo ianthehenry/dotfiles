@@ -2,7 +2,7 @@
 ZSH=$HOME/.oh-my-zsh
 ZSH_THEME="ian"
 DISABLE_LS_COLORS="true"
-plugins=(brew cake autojump mercurial sublime zsh-syntax-highlighting autojump)
+plugins=(zsh-syntax-highlighting)
 source $ZSH/oh-my-zsh.sh
 
 unsetopt HIST_VERIFY
