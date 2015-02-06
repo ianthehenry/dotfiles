@@ -24,6 +24,7 @@ alias emacs='open -a Emacs'
 alias s='source ~/.zshrc'
 alias c='cabal install -j --only-dependencies --enable-tests'
 alias d='terminal-notifier -message "done"'
+alias sed='perl -pe'
 
 fix() {
   git commit $@ --fixup "$(git log --oneline --topo-order --decorate -n30 | fzf --reverse | awk '{print $1}')"
