@@ -19,6 +19,7 @@
     tsk = blame
     whisk = rebase
     m = merge --no-ff
+    rc = rebase --continue
 [push]
 	default = upstream
 [color]
