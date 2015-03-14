@@ -5,9 +5,28 @@ DISABLE_LS_COLORS="true"
 plugins=(zsh-syntax-highlighting)
 source $ZSH/oh-my-zsh.sh
 
+addpath() {
+  export PATH="$1:$PATH"
+}
+
 unsetopt HIST_VERIFY
 setopt extendedglob
-export PATH="$HOME/.cask/bin:$HOME/.cabal/bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:/usr/local/share/npm/bin"
+
+export PATH="/sbin"
+addpath "/bin"
+addpath "/usr/sbin"
+addpath "/usr/bin"
+addpath "/usr/local/sbin"
+addpath "/usr/local/bin"
+addpath "/usr/local/share/npm/bin"
+addpath "/Applications/ghc-7.8.3.app/Contents/bin"
+addpath "$HOME/.cabal/bin"
+addpath "$HOME/.gem/ruby/2.2.0/bins"
+addpath "$HOME/.cask/bin"
+addpath "$HOME/bin"
+addpath "$HOME/src/httprintf/scripts"
+addpath "$HOME/src/hs/bin"
+addpath "/Library/TeX/Distributions/Programs/texbin"
 
 export VISUAL="subl -w"
 
