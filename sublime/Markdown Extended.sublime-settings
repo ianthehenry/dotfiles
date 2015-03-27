@@ -1,0 +1,7 @@
+{
+  "tab_size": 4,
+  "word_wrap": true,
+  "wrap_width": 80,
+  "rulers": [80],
+  "highlight_line": false
+}

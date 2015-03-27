@@ -1,0 +1,77 @@
+{
+	"caret_style": "solid",
+	"color_scheme": "Packages/User/Tomorrow Night.tmTheme",
+	"detect_indentation": false,
+	"ensure_newline_at_eof_on_save": true,
+	"file_exclude_patterns":
+	[
+		"*.pyc",
+		"*.pyo",
+		"*.exe",
+		"*.dll",
+		"*.obj",
+		"*.o",
+		"*.a",
+		"*.lib",
+		"*.so",
+		"*.dylib",
+		"*.ncb",
+		"*.sdf",
+		"*.suo",
+		"*.pdb",
+		"*.idb",
+		".DS_Store",
+		"*.pdf",
+		"*.class",
+		".hgignore",
+		"*.sublime-workspace",
+		"cabal.sandbox.config",
+		".gitignore"
+	],
+	"find_selected_text": true,
+	"folder_exclude_patterns":
+	[
+		"dist",
+		".cabal-sandbox",
+		"tmp",
+		".svn",
+		".git",
+		".hg",
+		"CVS",
+		"node_modules",
+		"bower_components",
+		"build",
+		"__pycache__",
+		"target",
+		".build"
+	],
+	"font_face": "Menlo",
+	"font_size": 13,
+	"highlight_line": true,
+	"hot_exit": false,
+	"ignored_packages":
+	[
+		"SublimeHaskell",
+		"lispindent",
+		"Vintage"
+	],
+	"indent_guide_options":
+	[
+		"draw_normal",
+		"draw_active"
+	],
+	"line_padding_bottom": 1,
+	"line_padding_top": 1,
+	"open_files_in_new_window": false,
+	"overlay_scroll_bars": "system",
+	"remember_open_files": true,
+	"scroll_past_end": true,
+	"shift_tab_unindent": true,
+	"tab_size": 2,
+	"terminal": "iTerm",
+	"theme": "Soda Dark.sublime-theme",
+	"translate_tabs_to_spaces": true,
+	"trim_trailing_white_space_on_save": false,
+	"use_simple_full_screen": false,
+	"word_wrap": false
+}

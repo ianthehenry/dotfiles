@@ -1,0 +1,66 @@
+[
+  { "keys": ["ctrl+tab"], "command": "next_view" },
+  { "keys": ["ctrl+shift+tab"], "command": "prev_view" },
+  { "keys": ["ctrl+super+left"], "command": "prev_view_in_stack" },
+  { "keys": ["ctrl+super+right"], "command": "next_view_in_stack" },
+  { "keys": ["super+shift+b"], "command": "build" },
+  { "keys": ["super+;"], "command": "show_overlay", "args": {"overlay": "goto", "text": "#"} },
+  { "keys": ["super+shift+;"], "command": "show_overlay", "args": {"overlay": "goto", "text": ":"} },
+  { "keys": ["super+e"], "command": "expand_selection", "args": {"to": "line"} },
+
+  { "keys": ["alt+tab"], "command": "insert", "args": {"characters": "\t"} },
+  { "keys": ["tab"], "command": "indent" },
+  { "keys": ["tab"], "command": "next_field", "context":
+    [
+      { "key": "has_next_field", "operator": "equal", "operand": true }
+    ]
+  },
+  { "keys": ["tab"], "command": "reindent", "context":
+    [
+      { "key": "setting.auto_indent", "operator": "equal", "operand": true },
+      { "key": "selection_empty", "operator": "equal", "operand": true, "match_all": true },
+      { "key": "preceding_text", "operator": "regex_match", "operand": "^$", "match_all": true },
+      { "key": "following_text", "operator": "regex_match", "operand": "^$", "match_all": true }
+    ]
+  },
+
+  // Auto-pair backticks
+  { "keys": ["`"], "command": "insert_snippet", "args": {"contents": "`$0`"}, "context":
+    [
+      { "key": "setting.auto_match_enabled", "operator": "equal", "operand": true },
+      { "key": "selection_empty", "operator": "equal", "operand": true, "match_all": true },
+      { "key": "following_text", "operator": "regex_contains", "operand": "^(?:\t| |\\)|]|\\}|$)", "match_all": true },
+      { "key": "preceding_text", "operator": "not_regex_contains", "operand": "[`a-zA-Z0-9_]$", "match_all": true },
+      { "key": "eol_selector", "operator": "not_equal", "operand": "string.quoted.single", "match_all": true }
+    ]
+  },
+  { "keys": ["`"], "command": "insert_snippet", "args": {"contents": "`${0:$SELECTION}`"}, "context":
+    [
+      { "key": "setting.auto_match_enabled", "operator": "equal", "operand": true },
+      { "key": "selection_empty", "operator": "equal", "operand": false, "match_all": true }
+    ]
+  },
+  { "keys": ["`"], "command": "move", "args": {"by": "characters", "forward": true}, "context":
+    [
+      { "key": "setting.auto_match_enabled", "operator": "equal", "operand": true },
+      { "key": "selection_empty", "operator": "equal", "operand": true, "match_all": true },
+      { "key": "following_text", "operator": "regex_contains", "operand": "^`", "match_all": true }
+    ]
+  },
+  { "keys": ["backspace"], "command": "run_macro_file", "args": {"file": "Packages/Default/Delete Left Right.sublime-macro"}, "context":
+    [
+      { "key": "setting.auto_match_enabled", "operator": "equal", "operand": true },
+      { "key": "selection_empty", "operator": "equal", "operand": true, "match_all": true },
+      { "key": "preceding_text", "operator": "regex_contains", "operand": "`$", "match_all": true },
+      { "key": "following_text", "operator": "regex_contains", "operand": "^`", "match_all": true }
+    ]
+  },
+  { "keys": ["super+'"], "command": "toggle_quotes" },
+
+  { "keys": ["shift+enter"], "command": "insert_snippet", "args": { "contents": "$0\n" } },
+
+  { "keys": ["ctrl+alt+super+left"], "command": "move_tab", "args": {"mod": -1} },
+  { "keys": ["ctrl+alt+super+right"], "command": "move_tab", "args": {"mod": 1} },
+
+  { "keys": ["alt+backquote"], "command": "show_panel", "args": {"panel": "console", "toggle": true} }
+]
