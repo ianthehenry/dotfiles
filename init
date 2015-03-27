@@ -6,3 +6,7 @@ ln -s $PWD/.vimrc ~
 ln -s $PWD/.gitignore_global ~
 ln -s $PWD/ian.zsh-theme ~/.oh-my-zsh/themes
 ln -s $PWD/.emacs.d/* ~/.emacs.d
+
+st="$HOME/Library/Application Support/Sublime Text 3/Packages/User"
+rm -r "$st"
+ln -s "$PWD/sublime" "$st"
