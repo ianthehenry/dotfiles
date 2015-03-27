@@ -10,3 +10,6 @@ ln -s $PWD/.emacs.d/* ~/.emacs.d
 st="$HOME/Library/Application Support/Sublime Text 3/Packages/User"
 rm -r "$st"
 ln -s "$PWD/sublime" "$st"
+
+defaults write -g ApplePressAndHoldEnabled -bool false
+defaults write com.apple.Terminal TotalTerminalHideStatusItemRegardless -bool yes
