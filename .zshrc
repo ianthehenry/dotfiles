@@ -19,6 +19,7 @@ addpath "/usr/bin"
 addpath "/usr/local/sbin"
 addpath "/usr/local/bin"
 addpath "/usr/local/share/npm/bin"
+addpath "$HOME/.rvm/bin"
 addpath "$HOME/Applications/ghc-7.8.4.app/Contents/bin"
 addpath "$HOME/.cabal/bin"
 addpath "$HOME/.gem/ruby/2.2.0/bins"
@@ -62,3 +63,6 @@ sdc() {
 jf() {
   pbpaste | jq '.' | pbcopy
 }
+
+rvm="$HOME/.rvm/scripts/rvm"
+[[ -s "$rvm" ]] && source "$rvm"
