@@ -31,10 +31,6 @@ addpath "/Library/TeX/Distributions/Programs/texbin"
 
 export VISUAL="subl -w"
 
-"="() {
-  echo "$@" | bc
-}
-
 rvm="$HOME/.rvm/scripts/rvm"
 [[ -s "$rvm" ]] && source "$rvm"
 
@@ -70,3 +66,6 @@ jf() {
   pbpaste | jq '.' | pbcopy
 }
 
+"="() {
+  echo "$@" | bc
+}
