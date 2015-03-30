@@ -35,6 +35,12 @@ export VISUAL="subl -w"
   echo "$@" | bc
 }
 
+rvm="$HOME/.rvm/scripts/rvm"
+[[ -s "$rvm" ]] && source "$rvm"
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+
 alias ls="ls -Fx"
 alias ll="ls -lAh"
 alias la="ls -A"
@@ -64,5 +70,3 @@ jf() {
   pbpaste | jq '.' | pbcopy
 }
 
-rvm="$HOME/.rvm/scripts/rvm"
-[[ -s "$rvm" ]] && source "$rvm"
