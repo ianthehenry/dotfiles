@@ -8,3 +8,7 @@
 .cabal-sandbox/
 cabal.sandbox.config
 .ackrc
+xcuserdata/
+Carthage/
+dist/
+TAGS
