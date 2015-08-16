@@ -7,26 +7,4 @@ ln -s $PWD/.vimrc ~
 ln -s $PWD/.gitignore_global ~
 ln -s $PWD/ian.zsh-theme ~/.oh-my-zsh/themes
 
-st="$HOME/Library/Application Support/Sublime Text 3/Packages/User"
-rm -r "$st"
-ln -s "$PWD/sublime" "$st"
-
 git clone --recursive https://github.com/syl20bnr/spacemacs ~/.emacs.d
-
-defaults write -g ApplePressAndHoldEnabled -bool false
-defaults write com.apple.Terminal TotalTerminalHideStatusItemRegardless -bool yes
-
-brew install cask --ignore-dependencies
-
-brew install git zsh ack jq ngrok nmap rust flow sqlite node \
-             terminal-notifier python3 fzf leiningen brew-cask
-
-brew cask install alfred emacs google-chrome java transmission \
-                  dropbox ghc iterm2 totalterminal vlc
-
-mkdir ~/hasking
-ln -s $PWD/hasking.cabal ~/hasking
-cd ~/hasking
-cabal sandbox init
-cabal install -j
-cd -

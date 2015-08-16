@@ -1,0 +1,12 @@
+#!/usr/bin/env sh
+
+set -e
+
+cabal update
+
+mkdir ~/hasking
+ln -s $PWD/hasking.cabal ~/hasking
+cd ~/hasking
+cabal sandbox init
+cabal install -j
+cd -
