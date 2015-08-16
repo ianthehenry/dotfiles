@@ -23,3 +23,10 @@ brew install git zsh ack jq ngrok nmap rust flow sqlite node \
 
 brew cask install alfred emacs google-chrome java transmission \
                   dropbox ghc iterm2 totalterminal vlc
+
+mkdir ~/hasking
+ln -s $PWD/hasking.cabal ~/hasking
+cd ~/hasking
+cabal sandbox init
+cabal install -j
+cd -
