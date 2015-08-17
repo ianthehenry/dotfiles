@@ -47,11 +47,9 @@ alias emacs='open -a Emacs'
 alias s='source ~/.zshrc'
 alias c='cabal install -j --only-dependencies --enable-tests'
 alias d='terminal-notifier -message "done"'
-alias ped='perl -pe'
-
-fix() {
-  git commit $@ --fixup "$(git log --oneline --topo-order --decorate -n30 | fzf --reverse | awk '{print $1}')"
-}
+alias srd='perl -pe'
+alias -g .c='$(git log --oneline --topo-order --decorate -n100 | fzf --reverse | cut -d" " -f1)'
+alias -g .d='$(git diff-index --name-only HEAD | fzf)'
 
 sd() {
   git diff "$@" > /tmp/git.diff
