@@ -20,7 +20,7 @@
     whisk = rebase
     m = merge --no-ff
     rc = rebase --continue
-    fix = "!f(){ git commit $@ --fixup $(git log --oneline --topo-order --decorate -n30 | fzf --reverse | awk '{print $1}'); }; f"
+    fix = commit --fixup
 [push]
 	default = upstream
 [color]
