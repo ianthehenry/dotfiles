@@ -9,4 +9,3 @@ ln -s $PWD/hasking.cabal ~/hasking
 cd ~/hasking
 cabal sandbox init
 cabal install -j
-cd -
