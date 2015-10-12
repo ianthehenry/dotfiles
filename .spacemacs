@@ -73,6 +73,7 @@
   (setq flycheck-indication-mode 'right-fringe)
   (setq powerline-default-separator nil)
   (golden-ratio-mode)
+  (subword-mode)
   (spacemacs/toggle-camel-case-motion))
 
 ;; Do not write anything past this comment. This is where Emacs will
