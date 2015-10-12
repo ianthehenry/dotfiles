@@ -9,7 +9,7 @@
      ;; auto-completion
      better-defaults
      emacs-lisp
-     (haskell :variables haskell-enable-shm-support t)
+     haskell
      git
      markdown
      ;; (shell :variables
