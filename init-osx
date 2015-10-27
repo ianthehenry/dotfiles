@@ -7,7 +7,7 @@ ln -s "$PWD/sublime" "$st"
 defaults write -g ApplePressAndHoldEnabled -bool false
 defaults write com.apple.Terminal TotalTerminalHideStatusItemRegardless -bool yes
 
-brew install cask --ignore-dependencies
+brew install caskroom/cask/brew-cask
 
 brew install git zsh ack jq ngrok nmap rust flow sqlite node \
              terminal-notifier python3 fzf leiningen brew-cask
