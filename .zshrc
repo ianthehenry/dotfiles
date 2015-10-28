@@ -39,7 +39,8 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
 
 alias ls="ls -Fx"
-alias ll="ls -lAh"
+alias ll="ls -loAh"
+alias l="ll"
 alias la="ls -A"
 alias subl.='subl .'
 alias xcode='open *.xcworkspace'
