@@ -22,6 +22,7 @@
     rc = rebase --continue
     fix = commit --fixup
     co = checkout
+    root = rev-parse --show-toplevel
 [push]
 	default = upstream
 [color]
