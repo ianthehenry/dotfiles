@@ -33,3 +33,4 @@
     smudge = git-media-smudge %f
 [rebase]
     autosquash = true
+    autostash = true
