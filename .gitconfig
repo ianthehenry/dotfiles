@@ -1,11 +1,11 @@
 [user]
-	name = Ian Henry
-	email = ianthehenry@gmail.com
+    name = Ian Henry
+    email = ianthehenry@gmail.com
 [core]
-	editor = "subl --wait"
-	excludesfile = "~/.gitignore_global"
+    editor = "subl --wait"
+    excludesfile = "~/.gitignore_global"
 [credential]
-	helper = osxkeychain
+    helper = osxkeychain
 [alias]
     git = !git
     ff = merge --ff-only @{u}
@@ -28,7 +28,7 @@
 [diff]
     algorithm = patience
 [filter "media"]
-	clean = git-media-clean %f
-	smudge = git-media-smudge %f
+    clean = git-media-clean %f
+    smudge = git-media-smudge %f
 [rebase]
-	autosquash = true
+    autosquash = true
