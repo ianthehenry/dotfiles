@@ -21,6 +21,7 @@
     m = merge --no-ff
     rc = rebase --continue
     fix = commit --fixup
+    co = checkout
 [push]
 	default = upstream
 [color]
