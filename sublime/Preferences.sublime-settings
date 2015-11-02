@@ -51,7 +51,6 @@
 	"hot_exit": false,
 	"ignored_packages":
 	[
-		"SublimeHaskell",
 		"lispindent",
 		"Vintage"
 	],
