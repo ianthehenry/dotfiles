@@ -9,8 +9,8 @@ defaults write com.apple.Terminal TotalTerminalHideStatusItemRegardless -bool ye
 
 brew install caskroom/cask/brew-cask
 
-brew install git zsh ack jq ngrok nmap rust flow sqlite node python3 \
-             terminal-notifier fzf leiningen brew-cask haskell-stack
+brew install git zsh ack jq ngrok nmap rust flow sqlite python3 fzf \
+             terminal-notifier leiningen brew-cask haskell-stack
 
-brew cask install alfred emacs google-chrome java transmission \
-                  dropbox iterm2 totalterminal vlc
+brew cask install alfred google-chrome java transmission \
+                  emacs dropbox iterm2 totalterminal vlc
