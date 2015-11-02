@@ -5,6 +5,7 @@
 	"installed_packages":
 	[
 		"Better CoffeeScript",
+		"Git Commit Message Syntax",
 		"JavaScriptNext - ES6 Syntax",
 		"Markdown Extended",
 		"Package Control",
