@@ -6,6 +6,7 @@ ln -s "$PWD/sublime" "$st"
 
 defaults write -g ApplePressAndHoldEnabled -bool false
 defaults write com.apple.Terminal TotalTerminalHideStatusItemRegardless -bool yes
+defaults write -g NSAutomaticWindowAnimationsEnabled -bool false
 
 brew install caskroom/cask/brew-cask
 
