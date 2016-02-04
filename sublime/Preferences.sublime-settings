@@ -43,7 +43,8 @@
 		"build",
 		"__pycache__",
 		"target",
-		".build"
+		".build",
+		".stack-work"
 	],
 	"font_face": "Menlo",
 	"font_size": 13,
