@@ -53,6 +53,7 @@ alias -g .c='$(git log --oneline --topo-order --decorate -n100 | fzf --reverse |
 alias -g .d='$(git diff-index --name-only HEAD | fzf | xargs -n1 printf "%s/%s\n" $(git root))'
 alias gap="git add -p"
 alias gcp="git checkout -p"
+alias words='pbpaste | wc -w'
 
 sd() {
   git diff "$@" > /tmp/git.diff
