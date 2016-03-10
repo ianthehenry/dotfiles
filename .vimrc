@@ -5,9 +5,9 @@ set autoindent
 filetype on
 set nobackup
 set directory=/tmp
-set tabstop=4
-set shiftwidth=4
+set tabstop=2
+set shiftwidth=2
 set expandtab
-set softtabstop=4
+set softtabstop=2
 set background=dark
-colorscheme solarized
+colorscheme tomorrow-night
