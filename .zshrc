@@ -12,7 +12,8 @@ addpath() {
 unsetopt HIST_VERIFY
 setopt extendedglob
 
-export PATH="/sbin"
+export PATH="$HOME/.nodenv/shims"
+addpath "/sbin"
 addpath "/bin"
 addpath "/usr/sbin"
 addpath "/usr/bin"
@@ -35,8 +36,6 @@ export VISUAL="subl -w"
 rvm="$HOME/.rvm/scripts/rvm"
 [[ -s "$rvm" ]] && source "$rvm"
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
 
 alias ls="ls -Fx"
 alias ll="ls -loAh"
