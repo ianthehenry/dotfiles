@@ -21,20 +21,19 @@ addpath "/usr/local/sbin"
 addpath "/usr/local/bin"
 addpath "/usr/local/share/npm/bin"
 addpath "$HOME/hasking/.cabal-sandbox/bin"
-addpath "$HOME/.rvm/bin"
 addpath "$HOME/Applications/ghc-7.10.2.app/Contents/bin"
 addpath "$HOME/.cabal/bin"
 addpath "$HOME/.gem/ruby/2.2.0/bins"
 addpath "$HOME/.cask/bin"
+addpath "$HOME/.rbenv/shims"
 addpath "$HOME/bin"
 addpath "$HOME/src/httprintf/scripts"
 addpath "$HOME/src/hs/bin"
 addpath "/Library/TeX/Distributions/Programs/texbin"
 
-export VISUAL="subl -w"
+source "$(brew --prefix rbenv)/completions/rbenv.zsh"
 
-rvm="$HOME/.rvm/scripts/rvm"
-[[ -s "$rvm" ]] && source "$rvm"
+export VISUAL="subl -w"
 
 
 alias ls="ls -Fx"
