@@ -2,10 +2,4 @@
 
 set -e
 
-cabal update
-
-mkdir ~/hasking
-ln -s $PWD/hasking.cabal ~/hasking
-cd ~/hasking
-cabal sandbox init
-cabal install -j
+stack install ghc-mod hasktags hlint stylish-haskell

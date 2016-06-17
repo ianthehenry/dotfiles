@@ -13,6 +13,7 @@ unsetopt HIST_VERIFY
 setopt extendedglob
 
 export PATH="$HOME/.nodenv/shims"
+addpath "$HOME/.local/bin"
 addpath "/sbin"
 addpath "/bin"
 addpath "/usr/sbin"
@@ -20,7 +21,6 @@ addpath "/usr/bin"
 addpath "/usr/local/sbin"
 addpath "/usr/local/bin"
 addpath "/usr/local/share/npm/bin"
-addpath "$HOME/hasking/.cabal-sandbox/bin"
 addpath "$HOME/Applications/ghc-7.10.2.app/Contents/bin"
 addpath "$HOME/.cabal/bin"
 addpath "$HOME/.gem/ruby/2.2.0/bins"
