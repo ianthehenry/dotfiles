@@ -14,6 +14,7 @@ setopt extendedglob
 
 export PATH="$HOME/.nodenv/shims"
 addpath "$HOME/.local/bin"
+addpath "$HOME/.pyenv/shims"
 addpath "/sbin"
 addpath "/bin"
 addpath "/usr/sbin"
