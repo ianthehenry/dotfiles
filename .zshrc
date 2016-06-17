@@ -31,10 +31,7 @@ addpath "$HOME/bin"
 addpath "$HOME/src/httprintf/scripts"
 addpath "$HOME/src/hs/bin"
 
-source "$(brew --prefix rbenv)/completions/rbenv.zsh"
-
 export VISUAL="subl -w"
-
 
 alias ls="ls -Fx"
 alias ll="ls -loAh"
