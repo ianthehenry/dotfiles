@@ -6,7 +6,7 @@ plugins=(zsh-syntax-highlighting)
 source $ZSH/oh-my-zsh.sh
 
 addpath() {
-  export PATH="$1:$PATH"
+  export PATH="$PATH:$1"
 }
 
 unsetopt HIST_VERIFY
