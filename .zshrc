@@ -30,7 +30,6 @@ addpath "$HOME/.rbenv/shims"
 addpath "$HOME/bin"
 addpath "$HOME/src/httprintf/scripts"
 addpath "$HOME/src/hs/bin"
-addpath "/Library/TeX/Distributions/Programs/texbin"
 
 source "$(brew --prefix rbenv)/completions/rbenv.zsh"
 
