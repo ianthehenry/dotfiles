@@ -48,12 +48,12 @@ alias words='pbpaste | wc -w'
 alias rot13='tr "A-Za-z" "N-ZA-Mn-za-m"'
 
 sd() {
-  git diff "$@" > /tmp/git.diff
+  git diff --no-ext-diff "$@" > /tmp/git.diff
   subl /tmp/git.diff
 }
 
 sdc() {
-  git diff --cached "$@" > /tmp/git.diff
+  git diff --no-ext-diff --cached "$@" > /tmp/git.diff
   subl /tmp/git.diff
 }
 
