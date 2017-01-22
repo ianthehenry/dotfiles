@@ -1,34 +1,34 @@
 [user]
-    name = Ian Henry
-    email = ianthehenry@gmail.com
+  name = Ian Henry
+  email = ianthehenry@gmail.com
 [core]
-    editor = "subl --wait"
-    excludesfile = "~/.gitignore_global"
+  editor = "subl --wait"
+  excludesfile = "~/.gitignore_global"
 [credential]
-    helper = osxkeychain
+  helper = osxkeychain
 [alias]
-    git = !git
-    ff = merge --ff-only @{u}
-    hist = log --oneline --decorate --graph --topo-order
-    st = status --short --branch
-    com = commit
-    heads = for-each-ref --sort=-committerdate refs/heads/ --format='%(committerdate:short) %(authorname) %(refname:short)'
-    pushup = "!f(){ git push --set-upstream $1 $(git rev-parse --abbrev-ref HEAD); }; f"
-    serve = daemon --reuseaddr --base-path=. --export-all --verbose
-    pf = push --force-with-lease
-    rc = rebase --continue
-    fix = commit --fixup
-    co = checkout
-    root = rev-parse --show-toplevel
+  git = !git
+  ff = merge --ff-only @{u}
+  hist = log --oneline --decorate --graph --topo-order
+  st = status --short --branch
+  com = commit
+  heads = for-each-ref --sort=-committerdate refs/heads/ --format='%(committerdate:short) %(authorname) %(refname:short)'
+  pushup = "!f(){ git push --set-upstream $1 $(git rev-parse --abbrev-ref HEAD); }; f"
+  serve = daemon --reuseaddr --base-path=. --export-all --verbose
+  pf = push --force-with-lease
+  rc = rebase --continue
+  fix = commit --fixup
+  co = checkout
+  root = rev-parse --show-toplevel
 [push]
-	default = upstream
+  default = upstream
 [color]
-    ui = auto
+  ui = auto
 [diff]
-    algorithm = patience
+  algorithm = patience
 [filter "media"]
-    clean = git-media-clean %f
-    smudge = git-media-smudge %f
+  clean = git-media-clean %f
+  smudge = git-media-smudge %f
 [rebase]
-    autosquash = true
-    autostash = true
+  autosquash = true
+  autostash = true
