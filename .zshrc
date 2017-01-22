@@ -45,6 +45,7 @@ alias -g .d='$(git diff-index --name-only HEAD | fzf | xargs -n1 printf "%s/%s\n
 alias gap="git add -p"
 alias gcp="git checkout -p"
 alias words='pbpaste | wc -w'
+alias rot13='tr "A-Za-z" "N-ZA-Mn-za-m"'
 
 sd() {
   git diff "$@" > /tmp/git.diff
