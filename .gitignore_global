@@ -14,3 +14,4 @@ dist/
 TAGS
 .tags
 .stack-work
+npm-debug.log
