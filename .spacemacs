@@ -55,8 +55,20 @@ values."
    dotspacemacs-additional-packages '(dash dash-functional)
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
+
    ;; A list of packages that will not be installed and loaded.
-   dotspacemacs-excluded-packages '()
+   ;;
+   ;; Ian's overrides:
+   ;;
+   ;; paradox depends on a package called spinner, which is not in melpa, even
+   ;; though paradox itself is in melpa. spinner is only published to gnu elpa.
+   ;;
+   ;; https://github.com/Malabarba/paradox/issues/134
+   ;;
+   ;; evil-escape because I don't use it, and there's a bug where if you press
+   ;; escape after typing the first character in the sequence, emacs errors out.
+   dotspacemacs-excluded-packages
+   '(paradox adaptive-wrap evil-escape)
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
    ;; `used-only' installs only explicitly used packages and uninstall any
@@ -205,7 +217,7 @@ values."
    dotspacemacs-helm-use-fuzzy 'always
    ;; If non nil the paste micro-state is enabled. When enabled pressing `p`
    ;; several times cycle between the kill ring content. (default nil)
-   dotspacemacs-enable-paste-micro-state t
+   dotspacemacs-enable-paste-transient-state t
    ;; Which-key delay in seconds. The which-key buffer is the popup listing
    ;; the commands bound to the current keystroke sequence. (default 0.4)
    dotspacemacs-which-key-delay 0.4
@@ -227,7 +239,7 @@ values."
    ;; If non nil the frame is maximized when Emacs starts up.
    ;; Takes effect only if `dotspacemacs-fullscreen-at-startup' is nil.
    ;; (default nil) (Emacs 24.4+ only)
-   dotspacemacs-maximized-at-startup t
+   dotspacemacs-maximized-at-startup nil
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's active or selected.
    ;; Transparency can be toggled through `toggle-transparency'. (default 90)
@@ -246,18 +258,35 @@ values."
    ;; scrolling overrides the default behavior of Emacs which recenters point
    ;; when it reaches the top or bottom of the screen. (default t)
    dotspacemacs-smooth-scrolling t
-   ;; If non nil line numbers are turned on in all `prog-mode' and `text-mode'
-   ;; derivatives. If set to `relative', also turns on relative line numbers.
+   ;; Control line numbers activation.
+   ;; If set to `t' or `relative' line numbers are turned on in all `prog-mode' and
+   ;; `text-mode' derivatives. If set to `relative', line numbers are relative.
+   ;; This variable can also be set to a property list for finer control:
+   ;; '(:relative nil
+   ;;   :disabled-for-modes dired-mode
+   ;;                       doc-view-mode
+   ;;                       markdown-mode
+   ;;                       org-mode
+   ;;                       pdf-view-mode
+   ;;                       text-mode
+   ;;   :size-limit-kb 1000)
    ;; (default nil)
    dotspacemacs-line-numbers nil
+   ;; Code folding method. Possible values are `evil' and `origami'.
+   ;; (default 'evil)
+   dotspacemacs-folding-method 'evil
    ;; If non-nil smartparens-strict-mode will be enabled in programming modes.
    ;; (default nil)
    dotspacemacs-smartparens-strict-mode nil
+   ;; If non-nil pressing the closing parenthesis `)' key in insert mode passes
+   ;; over any automatically added closing parenthesis, bracket, quote, etc…
+   ;; This can be temporary disabled by pressing `C-q' before `)'. (default nil)
+   dotspacemacs-smart-closing-parenthesis nil
    ;; Select a scope to highlight delimiters. Possible values are `any',
    ;; `current', `all' or `nil'. Default is `all' (highlight any scope and
    ;; emphasis the current one). (default 'all)
    dotspacemacs-highlight-delimiters 'all
-   ;; If non nil advises quit functions to keep server open when quitting.
+   ;; If non nil, advise quit functions to keep server open when quitting.
    ;; (default nil)
    dotspacemacs-persistent-server nil
    ;; List of search tool executable names. Spacemacs uses the first installed
@@ -330,7 +359,17 @@ This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
 
+  ;; this gives us a noticeable performance improvement
+  (setq projectile-enable-caching t)
+
+  ;; This just fixes:
+  ;; https://github.com/syl20bnr/spacemacs/issues/9984
+  ;; Theoretically it can go away one day.
+  (setq helm-always-two-windows nil)
+  (setq helm-split-window-inside-p t)
+
   (setq powerline-default-separator nil)
+  (setq spaceline-responsive nil)
   ;; this is required after changing properties of powerline
   (spaceline-compile)
 
@@ -353,6 +392,9 @@ you should place your code here."
   ;; Without changing EDITOR, emacs tries to actually run vim inside itself.
   (setenv "EDITOR" "emacsclient")
 
+  ;; this is too slow, so I disable it and use helm when I need autocomplete.
+  (setq company-idle-delay nil)
+
   ;; theoretically prevents emacs from opening new windows on me without asking
   (setq split-height-threshold nil)
   (setq split-width-threshold nil)
@@ -371,17 +413,12 @@ you should place your code here."
               (setq-local comment-auto-fill-only-comments t)
               (turn-on-auto-fill)))
 
-  ;; this is a noticeable performance improvement
-  (setq projectile-enable-caching t)
-
   ;; this prevents emacs from prompting me every time I edit my .spacemacs file
   (setq vc-follow-symlinks nil)
   (setq vc-handled-backends nil)
 
-  ;; because file descriptors are a real thing
-  (setq-default evil-escape-key-sequence ",,")
-
   (define-key evil-normal-state-map "U" 'undo-tree-redo)
+  (evil-global-set-key 'normal "gw" 'fill-paragraph)
 
   ;; in non-evil buffers, this closes all windows except the active one
   (global-unset-key [?\e ?\e ?\e])
@@ -418,11 +455,11 @@ you should place your code here."
   ;; make neotree usable
   (setq neo-theme 'ascii)
   (setq neo-show-hidden-files nil)
-  ;; Hide OCaml artifacts
-  (let* ((exts (list "a" "cmi" "cmt" "cmti" "cmx" "cmxa" "deps" "o"
-                     "libdeps" "ml-gen" "d" "out" "stub.names" "modules"
-                     "pack-order" "moduledeps" "objdeps" "build_info.sexp"
-                     "hg_version.c"))
+  (let* ((exts (list "a" "cmi" "cmt" "cmti" "cmx" "cmxa" "deps" "o" "libdeps"
+                     "ml-gen" "d" "out" "stub.names" "modules" "pack-order"
+                     "moduledeps" "objdeps" "build_info.sexp" "hg_version.c"
+                     "cmo" "cmo.js" "bc.js" "cma" "cma.js" "jsdeps"
+                     "runtime.js"))
          (regexps (--map (concat "\\." (regexp-quote it) "$") exts)))
     (setq neo-hidden-regexp-list (cons "^\\." regexps))))
 
@@ -437,4 +474,13 @@ you should place your code here."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(enable-recursive-minibuffers t)
+ '(evil-want-Y-yank-to-eol t)
+ '(helm-use-frame-when-more-than-two-windows nil)
+ '(js-indent-level 2)
+ '(projectile-hg-command "hg files -0 -I .")
+ '(projectile-project-root-files-functions
+   (quote
+    (ian/custom-project-root projectile-root-local projectile-root-bottom-up projectile-root-top-down projectile-root-top-down-recurring)))
+ '(sh-basic-offset 2)
+ '(sh-indentation 2))
