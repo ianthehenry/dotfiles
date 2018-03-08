@@ -1,7 +1,9 @@
 # Path to your oh-my-zsh configuration.
 ZSH=$HOME/.oh-my-zsh
 ZSH_THEME="ian"
+HYPHEN_INSENSITIVE="true"
 DISABLE_LS_COLORS="true"
+COMPLETION_WAITING_DOTS="true"
 plugins=(zsh-syntax-highlighting)
 source $ZSH/oh-my-zsh.sh
 
@@ -29,10 +31,10 @@ addpath "$HOME/src/httprintf/scripts"
 
 export VISUAL="subl -w"
 
-alias ls="ls -Fx"
-alias ll="ls -loAh"
-alias l="ll"
-alias la="ls -A"
+alias ls='ls -Fx'
+alias ll='ls -loAh'
+alias l='ll'
+alias la='ls -A'
 alias subl.='subl .'
 alias xcode='open *.xcworkspace 2&>/dev/null || open *.xcodeproj'
 alias emacs='open -a Emacs'
@@ -42,10 +44,12 @@ alias d='terminal-notifier -message "done: $?"'
 alias srd='perl -pe'
 alias -g .c='$(git log --oneline --topo-order --decorate -n100 | fzf --reverse | cut -d" " -f1)'
 alias -g .d='$(git diff-index --name-only HEAD | fzf | xargs -n1 printf "%s/%s\n" $(git root))'
-alias gap="git add -p"
-alias gcp="git checkout -p"
+alias -g .f='$(fzf)'
+alias gap='git add -p'
+alias gcp='git checkout -p'
 alias words='pbpaste | wc -w'
 alias rot13='tr "A-Za-z" "N-ZA-Mn-za-m"'
+alias cp='cp -p'
 
 sd() {
   git diff --no-ext-diff "$@" > /tmp/git.diff
