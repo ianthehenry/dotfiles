@@ -1,0 +1,26 @@
+#compdef sd
+
+function __list_commands {
+  local -a subcmds
+  local line dir next
+  dir="$1"
+  for command in $(find "$dir" -not -name '*.help' -maxdepth 1 -mindepth 1); do
+    helpfile="$command.help"
+    command=$(basename "$command")
+    help=""
+    if [[ -f "$helpfile" ]]; then
+      help=$(head -n1 "$helpfile")
+    fi
+    subcmds=($subcmds "$command:\"$help\"")
+  done
+
+  _arguments -C ": :(($subcmds))" \
+    "*::arg:->args"
+
+  next="$dir/$line[1]"
+  if [[ ! -z $line[1] && -d "$next" ]]; then
+    __list_commands "$next"
+  fi
+}
+
+__list_commands ${SD_ROOT:-"$HOME/sd"}

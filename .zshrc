@@ -29,6 +29,8 @@ addpath "./node_modules/.bin"
 addpath "$HOME/.cabal/bin"
 addpath "$HOME/src/httprintf/scripts"
 
+export fpath=(~/bin/completions $fpath)
+
 export VISUAL="subl -w"
 
 alias ls='ls -Fx'
