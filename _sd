@@ -4,7 +4,7 @@ function __list_commands {
   local -a subcmds
   local line dir next
   dir="$1"
-  for command in $(find "$dir" -not -name '*.help' -maxdepth 1 -mindepth 1); do
+  for command in $(find "$dir" -maxdepth 1 -mindepth 1 -not -name '*.help'); do
     helpfile="$command.help"
     command=$(basename "$command")
     help=""

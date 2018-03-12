@@ -27,7 +27,7 @@ while [[ $# > 0 ]]; do
 done
 
 echo "Commands:"
-for file in $(find . -not -name '*.help' -maxdepth 1 -mindepth 1); do
+for file in $(find . -maxdepth 1 -mindepth 1 -not -name '*.help'); do
   helpfile="$file.help"
   help=""
   if [[ -f "$helpfile" ]]; then
