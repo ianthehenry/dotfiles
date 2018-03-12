@@ -2,32 +2,31 @@
 
 set -euo pipefail
 
-SD_ROOT="$HOME/sd"
-cd "$SD_ROOT"
+dir=${SD_ROOT:-"$HOME/sd"}
 
 while [[ $# > 0 ]]; do
   command="$1"
   shift
-  if [[ -d "$command" ]]; then
-    cd "$command"
-  elif [[ -f "$command" ]]; then
-    if [[ -x "$command" ]]; then
-      "./$command" "$@"
+  if [[ -d "$dir/$command" ]]; then
+    dir="$dir/$command"
+  elif [[ -f "$dir/$command" ]]; then
+    if [[ -x "$dir/$command" ]]; then
+      "$dir/$command" "$@"
       exit 0
     else
       # For now, this is my very low-tech help system...
-      cat "$command"
+      cat "$dir/$command"
       exit 0
     fi
   else
     echo "file not found!" >&2
-    echo "$(pwd)/$command" >&2
+    echo "$dir/$command" >&2
     exit 1
   fi
 done
 
 echo "Commands:"
-for file in $(find . -maxdepth 1 -mindepth 1 -not -name '*.help'); do
+for file in $(find "$dir" -maxdepth 1 -mindepth 1 -not -name '*.help'); do
   helpfile="$file.help"
   help=""
   if [[ -f "$helpfile" ]]; then
