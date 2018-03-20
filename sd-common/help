@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+helpfile="$(sd which "$@").help"
+if [[ -f "$helpfile" ]]; then
+  cat "$helpfile"
+else
+  echo "there is no help for you here" >&2
+  exit 1
+fi

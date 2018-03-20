@@ -12,4 +12,8 @@ mkdir -p $HOME/bin/completions
 ln -s $PWD/sd $HOME/bin/sd
 ln -s $PWD/_sd $HOME/bin/completions/_sd
 
+for file in $PWD/sd-common/*; do
+  ln -s "$file" "$HOME/sd/$(basename "$file")"
+done
+
 git clone --recursive https://github.com/syl20bnr/spacemacs ~/.emacs.d
