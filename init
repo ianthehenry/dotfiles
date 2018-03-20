@@ -1,6 +1,7 @@
 #!/usr/bin/env sh
 
 ln -s $PWD/.zshrc ~
+ln -s $PWD/.zshenv ~
 ln -s $PWD/.spacemacs ~
 ln -s $PWD/.gitconfig ~
 ln -s $PWD/.vimrc ~
