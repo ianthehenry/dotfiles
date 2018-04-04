@@ -10,8 +10,8 @@ ln -s $PWD/.gitignore_global ~
 ln -s $PWD/ian.zsh-theme ~/.oh-my-zsh/themes
 
 mkdir -p $HOME/bin/completions
-ln -s $PWD/sd $HOME/bin/sd
-ln -s $PWD/_sd $HOME/bin/completions/_sd
+ln -s {$PWD,$HOME}/bin/sd
+ln -s {$PWD,$HOME}/bin/completions/_sd
 
 for file in $PWD/sd-common/*; do
   ln -s "$file" "$HOME/sd/$(basename "$file")"

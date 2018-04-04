@@ -1,0 +1,105 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+command=$1
+shift
+
+maxwidth=80
+padding_spaces=6
+
+function get_file {
+  echo "$HOME/todo/$1"
+}
+
+function pretty {
+  width=$(tput cols)
+  width=$(( $width < $maxwidth ? $width : $maxwidth ))
+  width=$(( $width - $padding_spaces ))
+  fold --spaces --width "$width" | sed -E -e '/^[^-]/s/^/      /'
+}
+
+function new_task {
+  local state file
+  state="$1"
+  shift
+  file="$1"
+  shift
+  echo "- [$state] $@" >> "$file"
+}
+
+function find_state {
+  grep "^- \[$1\]"
+}
+
+function completed {
+  find_state 'x'
+}
+
+function incomplete {
+  find_state ' '
+}
+
+function import {
+  from=$1
+  shift
+  to=$1
+  shift
+  date=$from
+  while [[ "$date" != "$to" ]]; do
+    incomplete <"$date" >> "$to"
+    date=$(date -I -d "$date + day")
+  done
+}
+
+file=$(get_file "today")
+active_day=$(basename $(readlink "$file"))
+today=$(date -I)
+
+if [[ "$active_day" != "$today" && "$command" != "day" ]]; then
+  echo "looking at $active_day; run 'to day' to update" >&2
+fi
+
+case "$command"
+in "cat")
+     if (( "$#" > 0 )); then
+       cat "$@" | pretty
+     else
+       pretty <"$file"
+     fi
+;; "do")
+     if (( "$#" == 0 )); then
+       incomplete < "$file" | pretty
+     else
+       new_task ' ' "$file" "$@"
+     fi
+;; "dos")
+     while read line; do
+       new_task ' ' "$file" "$line"
+     done
+;; "done")
+     if (( "$#" == 0 )); then
+       completed < "$file" | pretty
+     else
+       new_task 'x' "$file" "$@"
+     fi
+;; "dones")
+     while read line; do
+       new_task 'x' "$file" "$line"
+     done
+;; "day")
+     if [[ "$active_day" == "$today" ]]; then
+       echo "already up-to-date" >&2
+       exit 1
+     fi
+     import "$active_day" "$today"
+     ln -sf "$today" $(get_file "today")
+;; "did")
+     incomplete <"$file" | sed 's/^- //' | fzf --multi --exact "--query=$@"
+;; "edit")
+     if (( "$#" == 0 )); then
+       $VISUAL "$file"
+     else
+       $VISUAL $(get_file "$1")
+     fi
+esac
