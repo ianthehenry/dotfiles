@@ -519,12 +519,6 @@ dump."
    (t (call-interactively #'evil-visual-line))
    ))
 
-;; TODO: toggle between hard and soft BOL
-(evil-define-motion ian/beginning-of-line ()
-  (interactive)
-  (call-interactively #'evil-first-non-blank)
-  )
-
 (evil-define-command ian/insert-char (count char)
   (interactive "<c><C>")
   (setq count (or count 1))
@@ -538,25 +532,119 @@ dump."
   (save-excursion
     (insert (make-string 1 char)))))
 
+(defun ian/fix-evil-stuff ()
+  ;; there's probably some evil-define macro thing that I could do that
+  ;; would do this for me
+  (move-marker evil-visual-point (point))
+  (move-marker evil-visual-mark (mark))
+  )
+
+(defun ian/resolve-visual-line ()
+  (interactive)
+  (when (eq (evil-visual-type) 'line)
+    (let ((swap (eq evil-visual-direction -1)))
+      (when swap (exchange-point-and-mark))
+
+      (evil-visual-char)
+      (when (not (eq (point) (point-max)))
+        (previous-line 1)
+        (evil-end-of-line)
+        ;; because my end of line goes past the end...
+        (evil-backward-char))
+
+      (exchange-point-and-mark)
+      (evil-first-non-blank)
+
+      (when (not swap) (exchange-point-and-mark))
+      (ian/fix-evil-stuff)
+      )))
+
+(defun ian/surround-with (open-string close-string)
+  (ian/resolve-visual-line)
+  (let* ((begin (min evil-visual-point evil-visual-mark))
+         (end (max evil-visual-point evil-visual-mark))
+         (backwards (< evil-visual-point evil-visual-mark)))
+    (goto-char (+ end 1))
+    (insert close-string)
+    (goto-char begin)
+    (insert open-string)
+    (evil-visual-make-selection begin (+ end (length open-string) (length close-string)))
+    (exchange-point-and-mark)
+    (ian/fix-evil-stuff)
+    ))
+
+(defmacro ian/surrounder (open close)
+  `(lambda ()
+     (interactive)
+     (ian/surround-with ,open ,close)))
+
+;; this doesn't work right when operating on the last line in a file with no
+;; newline at the end. oh well.
+(defun ian/unsurround ()
+  (interactive)
+  (ian/resolve-visual-line)
+  (let* ((begin (min evil-visual-point evil-visual-mark))
+         (end (max evil-visual-point evil-visual-mark))
+         (backwards (< evil-visual-point evil-visual-mark)))
+    (goto-char end)
+    (delete-char 1)
+    (goto-char begin)
+    (delete-char 1)
+    (evil-visual-make-selection begin (- end 2))
+    (when backwards (exchange-point-and-mark))
+    (ian/fix-evil-stuff)
+    ))
+
+(defun ian/surround-prompt ()
+  (interactive)
+  (let* ((pair (evil-surround-pair (read-char)))
+         (open (car pair))
+         (close (cdr pair)))
+    (ian/surround-with open close)))
+
+(defun ian/normalize-selection-direction ()
+  ;; When you enter visual character selection, the selection direction is
+  ;; always forwards: the mark is before the character and the point is
+  ;; after.
+  ;;
+  ;; But in the case that we enter selection, then immediately go backwards,
+  ;; we want to keep the character our point was on selected -- it's very
+  ;; annoying otherwise. So we detect the single-character selection case
+  ;; and swap directions.
+  (when (eq (point) (1+ (mark)))
+    (exchange-point-and-mark)))
+
 (defun ian/forward-word (arg)
-  "Like forward-word, but behaves consistently with
+  "Lik forward-word, but behaves consistently with
 forward-symbol when you have a visual selection."
   (interactive "^p")
   (if (natnump arg)
       (re-search-forward "\\sw+" nil 'move arg)
-    (while (< arg 0)
-      (if (re-search-backward "\\sw+" nil 'move)
-          (skip-syntax-backward "w"))
-      (setq arg (1+ arg)))))
+    (progn
+      (ian/normalize-selection-direction)
+      (while (< arg 0)
+        (if (re-search-backward "\\sw+" nil 'move)
+            (skip-syntax-backward "w"))
+        (setq arg (1+ arg))))))
+
+(defun ian/forward-symbol (arg)
+  (interactive "^p")
+  (if (natnump arg)
+      (re-search-forward "\\(\\sw\\|\\s_\\)+" nil 'move arg)
+    (progn
+      (ian/normalize-selection-direction)
+      (while (< arg 0)
+        (if (re-search-backward "\\(\\sw\\|\\s_\\)+" nil 'move)
+            (skip-syntax-backward "w_"))
+        (setq arg (1+ arg))))))
 
 (defun ian/backward-word ()
   (interactive)
   (let ((current-prefix-arg '(-1))) (call-interactively #'ian/forward-word)))
 
-;; EMACS
 (defun ian/backward-symbol ()
   (interactive)
-  (let ((current-prefix-arg '(-1))) (call-interactively #'forward-symbol)))
+  (let ((current-prefix-arg '(-1))) (call-interactively #'ian/forward-symbol)))
 
 ;; Make it predictable in different modes.
 (defun ian/expand-region ()
@@ -570,6 +658,18 @@ forward-symbol when you have a visual selection."
                              er/mark-outside-pairs
                              ))
   (call-interactively #'er/expand-region))
+
+(defun ian/move-end-of-line ()
+  (interactive)
+  (skip-chars-forward "^\n"))
+
+(defun ian/move-beginning-of-line ()
+  (interactive)
+  (let ((start (point)))
+    (skip-chars-backward "^\n")
+    (skip-chars-forward " \t")
+    (when (eq start (point))
+      (skip-chars-backward "^\n"))))
 
 (defun dotspacemacs/user-config ()
   "Configuration for user code:
@@ -634,13 +734,26 @@ before packages are loaded."
   ;; standard evil motions
   (evil-global-set-key 'motion "e" 'ian/forward-word)
   (evil-global-set-key 'motion "b" 'ian/backward-word)
-  (evil-global-set-key 'motion "E" 'forward-symbol)
+  (evil-global-set-key 'motion "E" 'ian/forward-symbol)
   (evil-global-set-key 'motion "B" 'ian/backward-symbol)
+
+  ;; don't select the trailing newline
+  (evil-global-set-key 'visual "$" 'ian/move-end-of-line)
+  ;; toggle between hard and soft bol
+  (evil-global-set-key 'motion "^" 'ian/move-beginning-of-line)
 
   ;; use swiper for incremental search -- need to figure out a more elegant
   ;; resume than this
   (define-key evil-normal-state-map "/" 'swiper)
   (define-key evil-normal-state-map "?" 'ivy-resume)
+  (evil-global-set-key 'visual "/"
+                       #'(lambda ()
+                           (interactive)
+                           (let ((input
+                                  (buffer-substring-no-properties
+                                   (region-beginning) (region-end))))
+                             (evil-exit-visual-state)
+                             (swiper input))))
 
   (define-key evil-normal-state-map "U" 'undo-tree-redo)
   (evil-global-set-key 'normal "gw" 'fill-paragraph)
@@ -651,7 +764,8 @@ before packages are loaded."
 
   (comment
    (let ((keys '("a" "b" "c" "d" "e" "f" "g" "h" "i" "j" "k" "l" "m" "n" "o"
-                 "p" "q" "r" "s" "t" "u" "v" "w" "x" "y" "z" "[" "]")))
+                 "p" "q" "r" "s" "t" "u" "v" "w" "x" "y" "z" "[" "]" "$"
+                 "%" "^" "(" ")")))
      (dolist (key (append keys (-map #'upcase keys)))
        (evil-global-set-key 'normal (kbd key) nil)
        (evil-global-set-key 'motion (kbd key) nil)
@@ -689,17 +803,36 @@ before packages are loaded."
    (evil-global-set-key 'motion "h" 'evil-next-visual-line)
    (evil-global-set-key 'motion "s" 'evil-backward-char)
    (evil-global-set-key 'motion "t" 'evil-forward-char)
-   (evil-global-set-key 'motion "a" 'ian/beginning-of-line)
-   (evil-global-set-key 'motion "g" 'evil-end-of-line)
+   (evil-global-set-key 'motion "a" 'ian/move-beginning-of-line)
+   (evil-global-set-key 'motion "g" 'ian/move-end-of-line)
    (evil-global-set-key 'motion "w" 'ian/forward-word)
-   (evil-global-set-key 'motion "W" 'forward-symbol)
+   (evil-global-set-key 'motion "W" 'ian/forward-symbol)
    (evil-global-set-key 'motion "d" 'ian/backward-word)
    (evil-global-set-key 'motion "D" 'ian/backward-symbol)
+   ;; not really sure about this either. I do use this a lot, but will I with
+   ;; easier expansion?
+   (evil-global-set-key 'motion "c" 'evil-jump-item)
+   ;; not really sure about this one. I don't use it now at all, but I maybe should?
+   (evil-global-set-key 'visual "k" 'exchange-point-and-mark)
 
    ;; this makes my "call expand region in visual mode" not conflict with any
    ;; other bindings
    (setq expand-region-fast-keys-enabled nil)
    )
+
+  (evil-global-set-key 'visual "(" 'ian/unsurround)
+  (evil-global-set-key 'visual ")" (ian/surrounder "(" ")"))
+  (evil-global-set-key 'visual "'" (ian/surrounder "'" "'"))
+  (evil-global-set-key 'visual "\"" (ian/surrounder "\"" "\""))
+  ;; We have to unset this in order to use my custom visual mapping -- otherwise
+  ;; it takes precedence.
+  (evil-define-key 'visual evil-surround-mode-map "s" nil)
+  (evil-global-set-key 'visual "s" 'ian/surround-prompt)
+
+  ;; A temporary import. something about using the prefix SPC v makes this
+  ;; behave differently than a single keybinding. Dunno why.
+  (evil-global-set-key 'visual "n" 'ian/expand-region)
+  (setq expand-region-fast-keys-enabled nil)
 
   ;; in non-evil buffers, this closes all windows except the active one
   (global-unset-key [?\e ?\e ?\e])
