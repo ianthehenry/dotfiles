@@ -611,11 +611,11 @@ dump."
   ;; we want to keep the character our point was on selected -- it's very
   ;; annoying otherwise. So we detect the single-character selection case
   ;; and swap directions.
-  (when (eq (point) (1+ (mark)))
+  (when (and (mark) (eq (point) (1+ (mark))))
     (exchange-point-and-mark)))
 
 (defun ian/forward-word (arg)
-  "Lik forward-word, but behaves consistently with
+  "Like forward-word, but behaves consistently with
 forward-symbol when you have a visual selection."
   (interactive "^p")
   (if (natnump arg)
@@ -646,12 +646,48 @@ forward-symbol when you have a visual selection."
   (interactive)
   (let ((current-prefix-arg '(-1))) (call-interactively #'ian/forward-symbol)))
 
+(defun ian/point-is-in-initial-whitespace ()
+  (and (or
+        (eq (following-char) ?\n)
+        (eq (char-syntax (following-char)) ?\s))
+       (save-excursion
+         (skip-chars-backward " \t")
+         (= (current-column) 0)
+         )))
+
+;; this should actually alternate -- if the immediate next line has data at this
+;; column, move "through" the contents to just before the first line without it.
+(defun ian/seek-line-with-non-whitespace-at-column (dir col whitespace)
+  (let ((start (point)))
+    (forward-line dir)
+    (move-to-column col)
+    ;; the line was too short
+    (when (and
+           (not (eq (point) start))
+           (or (< (current-column) col)
+               (ian/point-is-in-initial-whitespace)
+               ))
+      (ian/seek-line-with-non-whitespace-at-column dir col))
+    ))
+
+(defun ian/vertical-search-up ()
+  (interactive)
+  (ian/seek-line-with-non-whitespace-at-column -1 (current-column)))
+
+(defun ian/vertical-search-down ()
+  (interactive)
+  (ian/seek-line-with-non-whitespace-at-column 1 (current-column)))
+
 ;; Make it predictable in different modes.
+;;
+;; Also, this is kind of screwed up with mark-inside-quotes and ocaml comments.
+;; It seem that "*)" is recognized as a "quote" character, and then it tries to
+;; search backwards to find the starting "*)", which doesn't exist.
 (defun ian/expand-region ()
   (interactive)
   (setq er/try-expand-list '(er/mark-word
                              er/mark-symbol
-                             er/mark-symbol-with-prefix
+                             er/mark-comment
                              er/mark-inside-quotes
                              er/mark-outside-quotes
                              er/mark-inside-pairs
@@ -789,8 +825,8 @@ before packages are loaded."
    (evil-global-set-key 'normal "n" 'evil-visual-char)
    (evil-global-set-key 'normal "N" 'evil-visual-line)
 
-   ;; in visual mode this should delete the selected text without copying it
    (evil-global-set-key 'normal "p" 'spacemacs/paste-transient-state/evil-paste-before)
+   (setq evil-kill-on-visual-paste nil)
 
    (evil-global-set-key 'visual "e" 'evil-change)
    (evil-global-set-key 'visual "E" 'ian/change-to-one-char)
