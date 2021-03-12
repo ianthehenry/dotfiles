@@ -18,4 +18,8 @@ addpath "./node_modules/.bin"
 addpath "$HOME/.cabal/bin"
 addpath "$HOME/src/httprintf/scripts"
 
-export PATH
+export NIX_PAGER=
+
+if [[ -e ~/.nix-profile/etc/profile.d/nix.sh ]]; then 
+  source ~/.nix-profile/etc/profile.d/nix.sh
+fi
