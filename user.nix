@@ -1,0 +1,34 @@
+with import <nixpkgs> {}; [
+  cabal-install
+  curl
+  fzf
+  git
+  graphviz
+  hexedit
+  htop
+  hugo
+  imagemagick
+  jq
+  nasm
+  ngrok
+  nix
+  nmap
+  nodejs
+  cacert
+  opam
+  pandoc
+  pngcrush
+  pv
+  python2
+  python3
+  rbenv
+  ripgrep
+  sqlite
+  stack
+  terminal-notifier
+  tree
+  xz
+  yarn
+  yasm
+  zsh
+]
