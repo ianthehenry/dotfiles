@@ -4,12 +4,15 @@ function __list_commands {
   local -a subcmds
   local line dir next
   dir="$1"
-  for command in $(find "$dir" -maxdepth 1 -mindepth 1 -not -name '*.help'); do
-    helpfile="$command.help"
-    command=$(basename "$command")
-    help=""
+  for file in $(find "$dir" -maxdepth 1 -mindepth 1 -exec test -x {} \; -print); do
+    command=$(basename "$file")
+    helpfile="$file.help"
     if [[ -f "$helpfile" ]]; then
       help=$(head -n1 "$helpfile")
+    elif [[ -d "$file" ]]; then
+      help="$command commands"
+    else
+      help=$(sed -nE -e '/^#!/d' -e '/^#/{s/^# *//; p; q;}' "$file")
     fi
     subcmds=($subcmds "$command:\"$help\"")
   done
