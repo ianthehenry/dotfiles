@@ -13,6 +13,7 @@ mkdir -p $HOME/bin/completions
 ln -s {$PWD,$HOME}/bin/sd
 ln -s {$PWD,$HOME}/bin/completions/_sd
 
+mkdir -p $HOME/sd
 for file in $PWD/sd-common/*; do
   ln -s "$file" "$HOME/sd/$(basename "$file")"
 done
