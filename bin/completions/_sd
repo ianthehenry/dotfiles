@@ -4,7 +4,12 @@ function __list_commands {
   local -a subcmds
   local line dir next
   dir="$1"
-  for file in $(find "$dir" -maxdepth 1 -mindepth 1 -exec test -x {} \; -print); do
+  # the parens after the glob contains "glob qualifiers" (see man zshexpn):
+  # * executable
+  # - follow symlinks
+  # , "or" separator
+  # / directories
+  for file in "$dir"/*(-*,/); do
     command=$(basename "$file")
     helpfile="$file.help"
     if [[ -f "$helpfile" ]]; then
