@@ -32,7 +32,7 @@ alias xcode='open *.xcworkspace 2&>/dev/null || open *.xcodeproj'
 alias emacs='open -a Emacs'
 alias d='terminal-notifier -message "done: $?"'
 alias -g .c='$(git log --oneline --topo-order --decorate -n100 | fzf --reverse | cut -d" " -f1)'
-alias -g .d='$(git diff-index --name-only HEAD | fzf | xargs -n1 printf "%s/%s\n" $(git root))'
+alias -g .d='$(cd $(git root); git ls-files --exclude-standard --modified --others | fzf --height 4 --reverse | xargs -n1 printf "%s/%s\n" $(git root))'
 
 sd() {
   git diff --no-ext-diff "$@" > /tmp/git.diff
