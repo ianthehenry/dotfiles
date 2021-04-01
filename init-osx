@@ -1,4 +1,6 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
+
+set -euo pipefail
 
 st="$HOME/Library/Application Support/Sublime Text 3/Packages/User"
 rm -r "$st"
@@ -7,11 +9,3 @@ ln -s "$PWD/sublime" "$st"
 defaults write -g ApplePressAndHoldEnabled -bool false
 defaults write com.apple.Terminal TotalTerminalHideStatusItemRegardless -bool yes
 defaults write -g NSAutomaticWindowAnimationsEnabled -bool false
-
-brew install caskroom/cask/brew-cask
-
-brew install git zsh ack jq ngrok nmap rust flow sqlite python3 fzf \
-             terminal-notifier leiningen brew-cask haskell-stack nodenv
-
-brew cask install alfred google-chrome java transmission \
-                  emacs dropbox iterm2 totalterminal vlc

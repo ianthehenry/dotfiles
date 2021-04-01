@@ -1,5 +1,0 @@
-#!/usr/bin/env sh
-
-set -e
-
-stack install ghc-mod hasktags hlint stylish-haskell
