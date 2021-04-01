@@ -46,6 +46,7 @@ This function should only modify configuration layer settings."
      emacs-lisp
      neotree
      markdown
+     ocaml
      org
      nginx
      (syntax-checking :variables syntax-checking-enable-by-default nil)
@@ -655,28 +656,29 @@ forward-symbol when you have a visual selection."
          (= (current-column) 0)
          )))
 
-;; this should actually alternate -- if the immediate next line has data at this
-;; column, move "through" the contents to just before the first line without it.
-(defun ian/seek-line-with-non-whitespace-at-column (dir col whitespace)
+(defun ian/seek-line-with-non-whitespace-at-column (dir col target)
   (let ((start (point)))
     (forward-line dir)
     (move-to-column col)
-    ;; the line was too short
-    (when (and
-           (not (eq (point) start))
-           (or (< (current-column) col)
-               (ian/point-is-in-initial-whitespace)
-               ))
-      (ian/seek-line-with-non-whitespace-at-column dir col))
-    ))
+    (let ((point-in-whitespace (and
+                                (not (eq (point) start))
+                                (or (< (current-column) col)
+                                    (ian/point-is-in-initial-whitespace)
+                                    (eq (point) (point-at-eol))
+                                    ))))
+
+      (if (or (equal target -1) (not (equal target point-in-whitespace)))
+          (ian/seek-line-with-non-whitespace-at-column dir col (not point-in-whitespace))
+        (when target (goto-char start)))
+      )))
 
 (defun ian/vertical-search-up ()
   (interactive)
-  (ian/seek-line-with-non-whitespace-at-column -1 (current-column)))
+  (ian/seek-line-with-non-whitespace-at-column -1 (current-column) -1))
 
 (defun ian/vertical-search-down ()
   (interactive)
-  (ian/seek-line-with-non-whitespace-at-column 1 (current-column)))
+  (ian/seek-line-with-non-whitespace-at-column 1 (current-column) -1))
 
 ;; Make it predictable in different modes.
 ;;
@@ -701,11 +703,11 @@ forward-symbol when you have a visual selection."
 
 (defun ian/move-beginning-of-line ()
   (interactive)
+  (ian/normalize-selection-direction)
   (let ((start (point)))
-    (skip-chars-backward "^\n")
-    (skip-chars-forward " \t")
+    (back-to-indentation)
     (when (eq start (point))
-      (skip-chars-backward "^\n"))))
+      (beginning-of-line))))
 
 (defun dotspacemacs/user-config ()
   "Configuration for user code:
@@ -811,45 +813,70 @@ before packages are loaded."
        (evil-define-key 'visual evil-surround-mode-map (kbd key) nil)
        ))
 
-   ;; (evil-define-key 'visual evil-surround-mode-map (kbd "m") 'evil-surround-region)
-   (define-key evil-normal-state-map "u" 'undo-tree-undo)
-   (define-key evil-normal-state-map "U" 'undo-tree-redo)
-   ;; (evil-global-set-key 'normal "gw" 'fill-paragraph)
    (evil-global-set-key 'insert (kbd "M-SPC") 'hippie-expand)
 
    (evil-global-set-key 'normal [(return)] 'evil-open-below)
    (evil-global-set-key 'normal [(shift return)] 'evil-open-above)
 
+   ;; Insertion commands
    (evil-global-set-key 'normal "e" 'evil-insert)
    (evil-global-set-key 'normal "E" 'ian/insert-char)
-   (evil-global-set-key 'normal "n" 'evil-visual-char)
-   (evil-global-set-key 'normal "N" 'evil-visual-line)
-
-   (evil-global-set-key 'normal "p" 'spacemacs/paste-transient-state/evil-paste-before)
-   (setq evil-kill-on-visual-paste nil)
-
    (evil-global-set-key 'visual "e" 'evil-change)
    (evil-global-set-key 'visual "E" 'ian/change-to-one-char)
-   ;; backspace should probably be vim's 'x'
-   ;; (evil-global-set-key 'visual (kbd "DEL") 'evil-delete)
+   (evil-global-set-key 'normal "u" 'spacemacs/paste-transient-state/evil-paste-before)
+   ;; shift-paste = duplicate current line? or maybe there should be two
+   ;; paste-buffers? hmm.
+   (setq evil-kill-on-visual-paste nil)
+
+   ;; Selection commands
+   (evil-global-set-key 'normal "n" 'evil-visual-char)
+   (evil-global-set-key 'normal "N" 'evil-visual-line)
    (evil-global-set-key 'visual "n" 'ian/expand-region)
    (evil-global-set-key 'visual "N" 'ian/evil-visual-line)
+   (evil-global-set-key 'normal "y" 'ian/yank-line)
+   (evil-global-set-key 'visual "y" 'evil-yank)
+   (setq evil)
+
+   ;; Deletion commands
+   ;; TODO: should shift cause this to not cut? or to delete a single character?
+   (evil-global-set-key 'normal "o" 'evil-delete-whole-line)
+   (evil-global-set-key 'visual "o" 'evil-delete)
+
+   ;; Meta commands
+   (evil-global-set-key 'normal "i" 'undo-tree-undo)
+   (evil-global-set-key 'normal "I" 'undo-tree-redo)
 
    (evil-global-set-key 'motion "r" 'evil-previous-visual-line)
    (evil-global-set-key 'motion "h" 'evil-next-visual-line)
    (evil-global-set-key 'motion "s" 'evil-backward-char)
    (evil-global-set-key 'motion "t" 'evil-forward-char)
+
+   (evil-global-set-key 'motion "R" 'ian/vertical-search-up)
+   (evil-global-set-key 'motion "H" 'ian/vertical-search-down)
+   (evil-global-set-key 'motion "S" 'evil-find-char-backward)
+   (evil-global-set-key 'motion "T" 'evil-find-char)
+   (evil-global-set-key 'visual "S" 'evil-find-char-to-backward)
+   (evil-global-set-key 'visual "T" 'evil-find-char-to)
+
    (evil-global-set-key 'motion "a" 'ian/move-beginning-of-line)
+   (evil-global-set-key 'motion "A" 'evil-goto-first-line)
    (evil-global-set-key 'motion "g" 'ian/move-end-of-line)
+   (evil-global-set-key 'motion "G" 'end-of-buffer)
    (evil-global-set-key 'motion "w" 'ian/forward-word)
    (evil-global-set-key 'motion "W" 'ian/forward-symbol)
    (evil-global-set-key 'motion "d" 'ian/backward-word)
    (evil-global-set-key 'motion "D" 'ian/backward-symbol)
-   ;; not really sure about this either. I do use this a lot, but will I with
-   ;; easier expansion?
-   (evil-global-set-key 'motion "c" 'evil-jump-item)
-   ;; not really sure about this one. I don't use it now at all, but I maybe should?
-   (evil-global-set-key 'visual "k" 'exchange-point-and-mark)
+
+   (evil-global-set-key 'motion "c" 'exchange-point-and-mark)
+
+   (evil-global-set-key 'visual "(" 'ian/unsurround)
+   (evil-global-set-key 'visual ")" (ian/surrounder "(" ")"))
+   ;; (evil-global-set-key 'visual "'" (ian/surrounder "'" "'"))
+   (evil-global-set-key 'visual "\"" (ian/surrounder "\"" "\""))
+   ;; We have to unset this in order to use my custom visual mapping -- otherwise
+   ;; it takes precedence.
+   (evil-define-key 'visual evil-surround-mode-map "s" nil)
+   (evil-global-set-key 'visual "'" 'ian/surround-prompt)
 
    ;; this makes my "call expand region in visual mode" not conflict with any
    ;; other bindings
