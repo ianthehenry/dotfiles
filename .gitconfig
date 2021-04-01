@@ -4,6 +4,7 @@
 [core]
   editor = "subl --wait"
   excludesfile = "~/.gitignore_global"
+  pager = "less -S"
 [credential]
   helper = osxkeychain
 [alias]
