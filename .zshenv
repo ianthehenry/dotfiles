@@ -20,6 +20,6 @@ addpath "$HOME/src/httprintf/scripts"
 
 export NIX_PAGER=
 
-if [[ -e ~/.nix-profile/etc/profile.d/nix.sh ]]; then 
+if [[ -e ~/.nix-profile/etc/profile.d/nix.sh ]]; then
   source ~/.nix-profile/etc/profile.d/nix.sh
 fi
