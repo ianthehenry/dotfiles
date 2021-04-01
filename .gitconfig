@@ -18,6 +18,7 @@
   serve = daemon --reuseaddr --base-path=. --export-all --verbose
   pf = push --force-with-lease
   rc = rebase --continue
+  dc = diff --cached
   fix = commit --fixup
   co = checkout
   root = rev-parse --show-toplevel
