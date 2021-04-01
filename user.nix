@@ -1,5 +1,7 @@
 with import <nixpkgs> {}; [
+  (buildEnv { name = "mercurial-workaround"; paths = [ mercurial ]; } )
   cabal-install
+  cacert
   curl
   fzf
   git
@@ -14,9 +16,9 @@ with import <nixpkgs> {}; [
   nix
   nmap
   nodejs
-  cacert
   opam
   pandoc
+  patdiff
   pngcrush
   pv
   python2
@@ -26,6 +28,7 @@ with import <nixpkgs> {}; [
   sqlite
   stack
   terminal-notifier
+  tmux
   tree
   xz
   yarn
