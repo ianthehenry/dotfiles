@@ -17,6 +17,8 @@ PS2=$'%_ ➜\U00A0'
 unsetopt HIST_VERIFY
 setopt extendedglob
 
+setopt menucomplete
+
 export VISUAL="subl -w"
 
 alias ls='ls -Fx'
