@@ -28,6 +28,7 @@
   ui = auto
 [diff]
   algorithm = patience
+  external = $(command -v patdiff-git-wrapper)
 [filter "media"]
   clean = git-media-clean %f
   smudge = git-media-smudge %f
