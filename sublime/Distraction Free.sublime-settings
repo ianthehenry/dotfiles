@@ -1,4 +1,5 @@
-{ "rulers": []
+{
+ "rulers": []
 , "caret_style": "wide"
-//, "color_scheme": "Packages/User/Tomorrow Night Faceless.tmTheme"
+, "color_scheme": "Packages/User/Tomorrow Night Faceless.tmTheme"
 }

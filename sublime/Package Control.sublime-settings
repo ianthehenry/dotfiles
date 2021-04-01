@@ -1,17 +1,25 @@
 {
+	"bootstrapped": true,
 	"in_process_packages":
 	[
 	],
 	"installed_packages":
 	[
 		"Better CoffeeScript",
+		"Extract Sublime Package",
 		"Git Commit Message Syntax",
 		"JavaScriptNext - ES6 Syntax",
 		"Markdown Extended",
+		"Nix",
 		"Package Control",
+		"Prolog",
 		"Python 3",
+		"Reason",
+		"Solarized Color Scheme",
+		"Solarized Toggle",
 		"Stylus",
 		"Theme - Soda",
+		"Theme - Sodarized",
 		"ToggleQuotes",
 		"Tomorrow Color Schemes",
 		"TrailingSpaces"

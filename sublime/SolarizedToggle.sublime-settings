@@ -1,0 +1,8 @@
+{
+	"color_scheme_dark": "Packages/User/Tomorrow Night.tmTheme",
+	"color_scheme_light": "Packages/User/Tomorrow.tmTheme",
+	"enable_theme_switching": true,
+	"solarized_toggle_mode": "dark",
+	"theme_dark": "Soda Dark 3.sublime-theme",
+	"theme_light": "Soda Light 3.sublime-theme"
+}

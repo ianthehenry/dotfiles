@@ -62,5 +62,5 @@
   { "keys": ["ctrl+alt+super+left"], "command": "move_tab", "args": {"mod": -1} },
   { "keys": ["ctrl+alt+super+right"], "command": "move_tab", "args": {"mod": 1} },
 
-  { "keys": ["alt+backquote"], "command": "show_panel", "args": {"panel": "console", "toggle": true} }
+  { "keys": ["alt+backquote"], "command": "show_panel", "args": {"panel": "console", "toggle": true} },
 ]
