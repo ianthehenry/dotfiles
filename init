@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -euo pipefail
+
 cd "$(dirname "$0")"
 
 for file in .zshrc .zshenv .spacemacs .gitconfig .vimrc .tmux.conf .gitignore_global; do
