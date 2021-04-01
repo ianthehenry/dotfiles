@@ -1,20 +1,28 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
-ln -s $PWD/.zshrc ~
-ln -s $PWD/.zshenv ~
-ln -s $PWD/.spacemacs ~
-ln -s $PWD/.gitconfig ~
-ln -s $PWD/.vimrc ~
-ln -s $PWD/.tmux.conf ~
-ln -s $PWD/.gitignore_global ~
+cd "$(dirname "$0")"
 
-mkdir -p $HOME/bin/completions
-ln -s {$PWD,$HOME}/bin/sd
-ln -s {$PWD,$HOME}/bin/completions/_sd
-
-mkdir -p $HOME/sd
-for file in $PWD/sd-common/*; do
-  ln -s "$file" "$HOME/sd/$(basename "$file")"
+for file in .zshrc .zshenv .spacemacs .gitconfig .vimrc .tmux.conf .gitignore_global; do
+  if [[ ! -s "$HOME/$file" ]]; then
+    ln -s "$PWD/$file" "$HOME/$file"
+  fi
 done
 
-git clone --recursive https://github.com/syl20bnr/spacemacs ~/.emacs.d
+mkdir -p "$HOME/bin/completions"
+
+for path in bin/sd bin/completions/_sd; do
+  if [[ ! -s "$HOME/$path" ]]; then
+    ln -s {"$PWD","$HOME"}/"$path"
+  fi
+done
+
+mkdir -p "$HOME/sd"
+for file in "$PWD"/sd-common/*; do
+  if [[ ! -s "$HOME/sd/$(basename "$file")" ]]; then
+    ln -s "$file" "$HOME/sd/$(basename "$file")"
+  fi
+done
+
+if [[ ! -e "$HOME/.emacs.d" ]]; then
+  git clone --recursive https://github.com/syl20bnr/spacemacs "$HOME/.emacs.d"
+fi
