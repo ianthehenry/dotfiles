@@ -35,20 +35,9 @@ alias cp='cp -p'
 
 alias subl.='subl .'
 alias xcode='open *.xcworkspace 2&>/dev/null || open *.xcodeproj'
-alias emacs='open -a Emacs'
 alias d='terminal-notifier -message "done: $?"'
 alias -g .c='$(git log --oneline --topo-order --decorate -n100 | fzf --reverse | cut -d" " -f1)'
 alias -g .d='$(cd $(git root); git ls-files --exclude-standard --modified --others | fzf --height 4 --reverse | xargs -n1 printf "%s/%s\n" $(git root))'
-
-sd() {
-  git diff --no-ext-diff "$@" > /tmp/git.diff
-  subl /tmp/git.diff
-}
-
-sdc() {
-  git diff --no-ext-diff --cached "$@" > /tmp/git.diff
-  subl /tmp/git.diff
-}
 
 jf() {
   pbpaste | jq '.' | pbcopy
@@ -57,3 +46,6 @@ jf() {
 "="() {
   echo "$@" | bc
 }
+
+# opam configuration
+test -r /Users/ian/.opam/opam-init/init.zsh && . /Users/ian/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
