@@ -11,8 +11,11 @@ source "$ZSH/oh-my-zsh.sh"
 
 # use a nonbreaking space so that i can scroll to the end of an
 # empty prompt line in tmux
-PS1=$'%{$fg[blue]%}${PWD/#$HOME/~} ➜\U00A0%{$reset_color%}'
-PS2=$'%_ ➜\U00A0'
+export PS1=$'%{$fg[blue]%}${PWD/#$HOME/~} ➜\U00A0%{$reset_color%}'
+export PS2=$'%_ ➜\U00A0'
+
+# just print a backslash instead of a % or a # character after partial lines
+export PROMPT_EOL_MARK='%S\%s'
 
 unsetopt HIST_VERIFY
 setopt extendedglob
