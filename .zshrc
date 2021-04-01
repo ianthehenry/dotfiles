@@ -1,5 +1,4 @@
 ZSH="$HOME/.oh-my-zsh"
-ZSH_THEME="ian"
 HYPHEN_INSENSITIVE="true"
 DISABLE_LS_COLORS="true"
 COMPLETION_WAITING_DOTS="true"
@@ -9,6 +8,11 @@ fpath=(~/bin/completions $fpath)
 export fpath
 
 source "$ZSH/oh-my-zsh.sh"
+
+# use a nonbreaking space so that i can scroll to the end of an
+# empty prompt line in tmux
+PS1=$'%{$fg[blue]%}${PWD/#$HOME/~} ➜\U00A0%{$reset_color%}'
+PS2=$'%_ ➜\U00A0'
 
 unsetopt HIST_VERIFY
 setopt extendedglob
