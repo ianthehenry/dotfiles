@@ -31,7 +31,6 @@ alias ll='ls -loAh'
 alias s='source ~/.zshrc; source ~/.zshenv'
 alias srd='perl -pe'
 alias e='emacsclient -n'
-alias -g .f='$(fzf)'
 alias gap='git add -p'
 alias gcp='git checkout -p'
 alias cp='cp -p'
@@ -39,8 +38,56 @@ alias cp='cp -p'
 alias subl.='subl .'
 alias xcode='open *.xcworkspace 2&>/dev/null || open *.xcodeproj'
 alias d='terminal-notifier -message "done: $?"'
-alias -g .c='$(git log --oneline --topo-order --decorate -n100 | fzf --reverse | cut -d" " -f1)'
-alias -g .d='$(cd $(git root); git ls-files --exclude-standard --modified --others | fzf --height 4 --reverse | xargs -n1 printf "%s/%s\n" $(git root))'
+
+_expand-abbrev() {
+  local lastword="${LBUFFER##* }"
+  lastword="${lastword#\'}"
+  lastword="${lastword#\"}"
+  lastword="${lastword#*=}"
+  local op=""
+  case "$lastword" in
+    ".c")
+      if git root 2>/dev/null >/dev/null; then
+        op="commit"
+      fi;;
+    ".d")
+      if git root 2>/dev/null >/dev/null; then
+        op="dirty"
+      fi;;
+    ".b")
+      if git root 2>/dev/null >/dev/null; then
+        op="branch"
+      fi;;
+    ".f") op="files";;
+  esac
+
+  if [[ -z "$op" ]]; then
+    zle menu-complete
+  else
+    local replacement=""
+    case "$op" in
+      "commit") replacement=$(git log --oneline --topo-order --decorate -n100 | fzf --exit-0 --select-1 --reverse | cut -d' ' -f1);;
+      "dirty")
+        local gitroot=$(git root)
+        # this is kinda hairy... the perl mess gives you a nice relative path
+        # so you can use this with git add, and you don't have to deal with
+        # an absolute path since usually you don't need to
+        replacement=$( \
+          git -C "$gitroot" ls-files --exclude-standard --modified --others \
+        | fzf --exit-0 --select-1 --height 4 --reverse \
+        | perl -e 'use File::Spec; while(<STDIN>) { print(File::Spec->abs2rel(File::Spec->catfile($ARGV[0], $_))); }' -- "$gitroot"
+        );;
+      "branch") replacement=$(git for-each-ref --sort=-committerdate --format='%(refname:short)' refs/heads | fzf --exit-0 --select-1);;
+      "files")  replacement=$(rg --files | fzf --exit-0);;
+    esac
+
+    LBUFFER="${LBUFFER%"$lastword"}$replacement"
+    zle redisplay
+  fi
+}
+
+zle -N _expand-abbrev
+bindkey "\t" _expand-abbrev
 
 jf() {
   pbpaste | jq '.' | pbcopy
