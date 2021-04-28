@@ -58,7 +58,7 @@ _expand-abbrev() {
       if git root 2>/dev/null >/dev/null; then
         op="branch"
       fi;;
-    ".f") op="files";;
+    ".f") op="file";;
   esac
 
   if [[ -z "$op" ]]; then
@@ -66,7 +66,7 @@ _expand-abbrev() {
   else
     local replacement=""
     case "$op" in
-      "commit") replacement=$(git log --oneline --topo-order --decorate -n100 | fzf --exit-0 --select-1 --reverse | cut -d' ' -f1);;
+      "commit") replacement=$(git log --oneline --topo-order --decorate -n100 | fzf --exit-0 --select-1 --multi --reverse | cut -d' ' -f1 | tr '\n' ' ');;
       "dirty")
         local gitroot=$(git root)
         # this is kinda hairy... the perl mess gives you a nice relative path
@@ -74,11 +74,12 @@ _expand-abbrev() {
         # an absolute path since usually you don't need to
         replacement=$( \
           git -C "$gitroot" ls-files --exclude-standard --modified --others \
-        | fzf --exit-0 --select-1 --height 4 --reverse \
-        | perl -e 'use File::Spec; while(<STDIN>) { print(File::Spec->abs2rel(File::Spec->catfile($ARGV[0], $_))); }' -- "$gitroot"
+        | fzf --exit-0 --select-1 --height 4 --reverse --multi \
+        | perl -e 'use File::Spec; while(<STDIN>) { print(File::Spec->abs2rel(File::Spec->catfile($ARGV[0], $_))); }' -- "$gitroot" \
+        | tr '\n' ' '
         );;
-      "branch") replacement=$(git for-each-ref --sort=-committerdate --format='%(refname:short)' refs/heads | fzf --exit-0 --select-1);;
-      "files")  replacement=$(rg --files | fzf --exit-0);;
+      "branch") replacement=$(git for-each-ref --sort=-committerdate --format='%(refname:short)' refs/heads | fzf --exit-0 --multi --select-1 --print0 | tr '\0' ' ');;
+      "file")  replacement=$(rg --files | fzf --exit-0 --multi --print0 | tr '\0' ' ');;
     esac
 
     LBUFFER="${LBUFFER%"$lastword"}$replacement"
