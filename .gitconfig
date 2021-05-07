@@ -4,7 +4,30 @@
 [core]
   editor = "subl --wait"
   excludesfile = "~/.gitignore_global"
-  pager = "less -S"
+  pager = delta
+[diff]
+  algorithm = patience
+  colorMoved = default
+[interactive]
+  diffFilter = delta --color-only
+[delta]
+  features = decorations navigate
+  whitespace-error-style = red reverse
+  syntax-theme = none
+  minus-style = red normal
+  minus-non-emph-style = normal normal dim
+  minus-emph-style = red reverse
+  plus-style = green normal
+  plus-non-emph-style = normal normal
+  plus-emph-style = green reverse
+  minus-empty-line-marker-style = normal red ul
+  plus-empty-line-marker-style = normal green ul
+[delta "decorations"]
+  commit-decoration-style = bold yellow box ul
+  file-style = bold yellow
+  file-decoration-style = yellow bold ul ol
+  hunk-header-decoration-style = blue box
+  hunk-header-style = normal
 [credential]
   helper = osxkeychain
 [alias]
@@ -26,9 +49,6 @@
   default = upstream
 [color]
   ui = auto
-[diff]
-  algorithm = patience
-  external = $(command -v patdiff-git-wrapper)
 [filter "media"]
   clean = git-media-clean %f
   smudge = git-media-smudge %f

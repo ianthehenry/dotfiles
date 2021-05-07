@@ -3,6 +3,7 @@ with import <nixpkgs> {}; [
   cabal-install
   cacert
   curl
+  delta
   fzf
   git
   graphviz
@@ -18,7 +19,6 @@ with import <nixpkgs> {}; [
   nodejs
   opam
   pandoc
-  patdiff
   pngcrush
   pv
   python2
