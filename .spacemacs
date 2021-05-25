@@ -46,6 +46,7 @@ This function should only modify configuration layer settings."
      emacs-lisp
      neotree
      markdown
+     rust
      ocaml
      org
      nginx
