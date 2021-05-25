@@ -55,7 +55,7 @@
 	"ignored_packages":
 	[
 		"lispindent",
-		"Vintage"
+		"Vintage",
 	],
 	"indent_guide_options":
 	[
@@ -75,5 +75,5 @@
 	"translate_tabs_to_spaces": true,
 	"trim_trailing_white_space_on_save": false,
 	"use_simple_full_screen": false,
-	"word_wrap": false
+	"word_wrap": false,
 }
