@@ -63,4 +63,10 @@
   { "keys": ["ctrl+alt+super+right"], "command": "move_tab", "args": {"mod": 1} },
 
   { "keys": ["alt+backquote"], "command": "show_panel", "args": {"panel": "console", "toggle": true} },
+
+  { "keys": ["home"], "command": "move_to", "args": {"to": "bol", "extend": false} },
+  { "keys": ["end"], "command": "move_to", "args": {"to": "eol", "extend": false} },
+  { "keys": ["shift+home"], "command": "move_to", "args": {"to": "bol", "extend": true} },
+  { "keys": ["shift+end"], "command": "move_to", "args": {"to": "eol", "extend": true} },
+
 ]
