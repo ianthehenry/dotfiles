@@ -3,6 +3,7 @@ with import <nixpkgs> {}; [
   cacert
   curl
   delta
+  emacsMacport
   fzf
   git
   graphviz
@@ -25,6 +26,8 @@ with import <nixpkgs> {}; [
   python3
   rbenv
   ripgrep
+  ruby
+  rustracer
   sqlite
   stack
   terminal-notifier
