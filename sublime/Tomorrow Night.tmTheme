@@ -243,7 +243,9 @@
       <key>settings</key>
       <dict>
         <key>foreground</key>
-        <string>#F0C674</string>
+        <string>#1D1F21</string>
+        <key>background</key>
+        <string>#373B41</string>
       </dict>
     </dict>
 
