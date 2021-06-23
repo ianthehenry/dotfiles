@@ -1,5 +1,4 @@
 with import <nixpkgs> {}; [
-  (buildEnv { name = "mercurial-workaround"; paths = [ mercurial ]; } )
   cabal-install
   cacert
   curl
@@ -12,6 +11,7 @@ with import <nixpkgs> {}; [
   hugo
   imagemagick
   jq
+  mercurial
   nasm
   ngrok
   nix
