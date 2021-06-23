@@ -14,6 +14,15 @@ source "$ZSH/oh-my-zsh.sh"
 export PS1=$'%{$fg[blue]%}${PWD/#$HOME/~} ➜\U00A0%{$reset_color%}'
 export PS2=$'%_ ➜\U00A0'
 
+if [[ -n "$IN_NIX_SHELL" ]]; then
+  label="nix-shell"
+  if [[ "$name" != "$label" ]]; then
+    label="$label:$name"
+  fi
+  export PS1=$'%{$fg[green]%}'"$label $PS1"
+  unset label
+fi
+
 # just print a backslash instead of a % or a # character after partial lines
 export PROMPT_EOL_MARK='%S\%s'
 
@@ -23,6 +32,8 @@ setopt extendedglob
 setopt menucomplete
 
 export VISUAL="subl -w"
+
+export NIX_BUILD_SHELL=$HOME/src/nix-zshell/result
 
 alias ls='ls -Fx'
 alias la='ls -AFx'

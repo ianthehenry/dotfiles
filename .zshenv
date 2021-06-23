@@ -1,25 +1,23 @@
 function addpath {
-  export PATH="$PATH:$1"
+  PATH="$PATH:$1"
 }
 
-export PATH=""
-addpath "$HOME/.nodenv/shims"
-addpath "$HOME/.local/bin"
-addpath "$HOME/.pyenv/shims"
-addpath "$HOME/.rbenv/shims"
-addpath "$HOME/bin"
-addpath "/usr/local/bin"
-addpath "/usr/local/sbin"
-addpath "/bin"
-addpath "/sbin"
-addpath "/usr/bin"
-addpath "/usr/sbin"
-addpath "./node_modules/.bin"
-addpath "$HOME/.cabal/bin"
-addpath "$HOME/src/httprintf/scripts"
+if [[ -z "$IN_NIX_SHELL" ]]; then
+  PATH=""
+  addpath "$HOME/bin"
+  addpath "./node_modules/.bin"
+  addpath "/usr/local/bin"
+  addpath "/usr/local/sbin"
+  addpath "/usr/bin"
+  addpath "/usr/sbin"
+  addpath "/bin"
+  addpath "/sbin"
 
-export NIX_PAGER=
+  export NIX_PAGER=
 
-if [[ -e ~/.nix-profile/etc/profile.d/nix.sh ]]; then
-  source ~/.nix-profile/etc/profile.d/nix.sh
+  export PATH
+
+  if [[ -e ~/.nix-profile/etc/profile.d/nix.sh ]]; then
+    source ~/.nix-profile/etc/profile.d/nix.sh
+  fi
 fi
