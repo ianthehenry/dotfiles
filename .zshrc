@@ -75,24 +75,30 @@ _expand-abbrev() {
   if [[ -z "$op" ]]; then
     zle menu-complete
   else
-    local replacement=""
+    local result=""
     case "$op" in
-      "commit") replacement=$(git log --oneline --topo-order --decorate -n100 | fzf --exit-0 --select-1 --multi --reverse | cut -d' ' -f1 | tr '\n' ' ');;
+      "commit") result=$(git log --oneline --topo-order --decorate -n100 | fzf --exit-0 --select-1 --multi --reverse | cut -d' ' -f1);;
       "dirty")
         local gitroot=$(git root)
         # this is kinda hairy... the perl mess gives you a nice relative path
         # so you can use this with git add, and you don't have to deal with
         # an absolute path since usually you don't need to
-        replacement=$( \
+        result=$( \
           git -C "$gitroot" ls-files --exclude-standard --modified --others \
-        | fzf --exit-0 --select-1 --height 4 --reverse --multi \
-        | perl -e 'use File::Spec; while(<STDIN>) { print(File::Spec->abs2rel(File::Spec->catfile($ARGV[0], $_))); }' -- "$gitroot" \
-        | tr '\n' ' '
+        | fzf --exit-0 --select-1 --height 6 --reverse --multi \
+        | perl -e 'use File::Spec; while(<STDIN>) { print(File::Spec->abs2rel(File::Spec->catfile($ARGV[0], $_))); }' -- "$gitroot"
         );;
-      "branch") replacement=$(git for-each-ref --sort=-committerdate --format='%(refname:short)' refs/heads | fzf --exit-0 --multi --select-1 --print0 | tr '\0' ' ');;
-      "file")  replacement=$(rg --files | fzf --exit-0 --multi --print0 | tr '\0' ' ');;
+      "branch") result=$(git for-each-ref --sort=-committerdate --format='%(refname:short)' refs/heads | fzf --exit-0 --multi --select-1);;
+      "file")  result=$(rg --files | fzf --exit-0 --multi);;
     esac
-
+    replacement=""
+    while IFS= read -r line; do
+      escaped=$(printf '%q' "$line")
+      if [[ ! -z "$replacement" ]]; then
+        replacement="$replacement "
+      fi
+      replacement="$replacement$escaped"
+    done <<< "$result"
     LBUFFER="${LBUFFER%"$lastword"}$replacement"
     zle redisplay
   fi
