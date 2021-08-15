@@ -6,6 +6,7 @@ with import <nixpkgs> {}; [
   emacsMacport
   fzf
   git
+  git-revise
   graphviz
   hexedit
   htop
