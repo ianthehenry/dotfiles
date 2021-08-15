@@ -24,10 +24,8 @@
 		".DS_Store",
 		"*.pdf",
 		"*.class",
-		".hgignore",
 		"*.sublime-workspace",
 		"cabal.sandbox.config",
-		".gitignore",
 		"*.bs.js"
 	],
 	"find_selected_text": true,
