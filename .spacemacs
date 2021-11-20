@@ -939,6 +939,7 @@ before packages are loaded."
 
   ;; make evil better
   (setq evil-move-cursor-back nil)
+  (setq evil-move-beyond-eol t)
   (setq evil-want-fine-undo t)
 
   (setq swiper-goto-start-of-match t)
