@@ -31,27 +31,28 @@ This function should only modify configuration layer settings."
    dotspacemacs-configuration-layer-path '()
 
    ;; List of configuration layers to load.
-   dotspacemacs-configuration-layers
-   '(purescript
-     haskell
-     git
-     ivy
-     python
-     ruby
-     javascript
-     php
-     html
-     yaml
+   dotspacemacs-configuration-layers '(
+     (syntax-checking :variables syntax-checking-enable-by-default nil)
      auto-completion
      emacs-lisp
-     neotree
+     git
+     haskell
+     html
+     ivy
+     janet
+     javascript
      markdown
-     rust
+     neotree
+     nginx
      ocaml
      org
-     nginx
-     (syntax-checking :variables syntax-checking-enable-by-default nil)
+     php
+     purescript
+     python
+     ruby
+     rust
      version-control
+     yaml
    )
 
    ;; List of additional packages that will be installed without being wrapped
@@ -797,6 +798,128 @@ forward-symbol when you have a visual selection."
     (when (eq start (point))
       (beginning-of-line))))
 
+(defvar ian/selected-janet-tests nil)
+
+(defun ian/janet-test-select ()
+  (interactive)
+  (let* ((line (line-number-at-pos (point)))
+        (col (current-column))
+        (filename buffer-file-name)
+        (selector (format "%s:%d:%d" filename line col)))
+
+    (setq ian/selected-janet-tests (list filename selector))
+    (message "selected test: %s" selector)
+    ))
+
+(defun ian/escape-shell-command (&rest args)
+  (string-join (--map (shell-quote-argument it) args) " "))
+
+(defun ian/make-process-sentinel (on-exit)
+  (lambda (process event)
+     (when (memq (process-status process) '(exit signal))
+      (funcall on-exit (process-exit-status process))
+      ; (shell-command-sentinel process signal)
+      )))
+
+(defun ian/run-judge (on-exit &rest args)
+  (let*
+      ((filename (car ian/selected-janet-tests))
+       (test-selectors (cdr ian/selected-janet-tests))
+       (selector-args (--mapcat (list "--at" it) test-selectors))
+       (command (apply 'ian/escape-shell-command "janet" filename (append selector-args args))))
+    (save-window-excursion
+      (let* ((output-buffer (generate-new-buffer "*judge-output*"))
+             (process (progn
+                     (async-shell-command command output-buffer)
+                     (get-buffer-process output-buffer)))
+             (sentinel (ian/make-process-sentinel (apply-partially on-exit output-buffer filename))))
+        (when (process-live-p process)
+          (set-process-sentinel process sentinel))))))
+
+(defun ian/janet-test-run ()
+  (interactive)
+
+  (when (null ian/selected-janet-tests)
+    (call-interactively 'ian/janet-test-select))
+
+  (ian/run-judge
+   (lambda (output-buffer filename exit-status)
+     (with-current-buffer output-buffer
+       (goto-char (point-max))
+       (forward-line -1)
+       (message "%s" (string-trim (thing-at-point 'line)))
+       ; TODO: this should be configurable with the thing
+       ;(kill-buffer)
+       )
+     (let ((diff-buffer (get-buffer-create "*Verdict*")))
+       (if (zerop exit-status)
+           (with-current-buffer diff-buffer
+             (setq buffer-read-only nil)
+             (erase-buffer)
+             (insert "all tests passed"))
+           (progn
+             (diff-no-select filename (concat filename ".corrected") nil t diff-buffer)
+             (display-buffer diff-buffer)))
+       (with-current-buffer diff-buffer
+         ; i don't know what sets this in the first place
+         (whitespace-mode 0)
+         (dolist (window (get-buffer-window-list))
+           (fit-window-to-buffer window)))
+       ))))
+
+(defface ian/judge-flash-face
+  '((((class color)) (:background "slate blue"))
+    (t (:inverse-video t)))
+  "Face for highlighting revert differences."
+  :group 'ian/judge)
+
+(defun ian/flash (bounds)
+  (let ((overlay (make-overlay (car bounds) (cadr bounds))))
+    (overlay-put overlay 'face 'ian/judge-flash-face)
+    (run-with-timer 0.5 nil (lambda () (delete-overlay overlay)))))
+
+(defun ian/revert-with-highlight ()
+  (let ((before (buffer-string))
+        (actual-buffer (current-buffer)))
+    (revert-buffer t t t)
+    (with-temp-buffer
+      (let ((before-buffer (current-buffer)))
+        (insert before)
+        (with-current-buffer actual-buffer
+          (save-excursion
+            (highlight-compare-buffers actual-buffer before-buffer)
+            (let ((changed-regions
+                   (--map
+                    (list (overlay-start it) (overlay-end it))
+                    (--filter (overlay-get it 'hilit-chg)
+                              (overlays-in (point-min) (point-max))))))
+              (highlight-changes-mode 0)
+              (dolist (region changed-regions)
+                (ian/flash region))))
+          )))))
+
+(defun ian/janet-test-accept ()
+  (interactive)
+  (if-let ((test-filename (car ian/selected-janet-tests)))
+      (let ((corrected-filename (concat test-filename ".corrected")))
+        (if (file-exists-p corrected-filename)
+            (progn
+              (rename-file corrected-filename test-filename t)
+              (when (string= buffer-file-name test-filename)
+                (ian/revert-with-highlight)))
+          (message "no .corrected file found")))
+    (message "no test selected")))
+
+(defun ian/janet-test-run-and-accept ()
+  (interactive)
+
+  (when (null ian/selected-janet-tests)
+    (call-interactively 'ian/janet-test-select))
+
+  (ian/run-judge
+   (lambda (output-buffer filename exit-status)
+     (ian/janet-test-accept))))
+
 (defun dotspacemacs/user-config ()
   "Configuration for user code:
 This function is called at the very end of Spacemacs startup, after layer
@@ -843,6 +966,12 @@ before packages are loaded."
   (setq split-height-threshold nil)
   (setq split-width-threshold nil)
 
+  (add-hook 'after-revert-hook
+            (lambda ()
+              (when (bound-and-true-p iimage-mode)
+                (iimage-mode 0)
+                (iimage-mode 1))))
+
   (dolist (hook '(text-mode-hook prog-mode-hook))
     (add-hook hook 'spacemacs/toggle-truncate-lines-on))
   (add-hook 'text-mode-hook 'turn-on-auto-fill)
@@ -851,6 +980,11 @@ before packages are loaded."
             (lambda ()
               (setq-local comment-auto-fill-only-comments t)
               (turn-on-auto-fill)))
+
+  (spacemacs/set-leader-keys-for-major-mode 'janet-mode "ts" 'ian/janet-test-select)
+  (spacemacs/set-leader-keys-for-major-mode 'janet-mode "tr" 'ian/janet-test-run)
+  (spacemacs/set-leader-keys-for-major-mode 'janet-mode "ta" 'ian/janet-test-accept)
+  (spacemacs/set-leader-keys-for-major-mode 'janet-mode "tR" 'ian/janet-test-run-and-accept)
 
   ;; this prevents emacs from prompting me every time I edit my .spacemacs file
   (setq vc-follow-symlinks nil)
