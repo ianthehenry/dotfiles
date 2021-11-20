@@ -10,7 +10,6 @@ with import <nixpkgs> {}; [
   graphviz
   hexedit
   htop
-  hugo
   imagemagick
   jq
   mercurial
