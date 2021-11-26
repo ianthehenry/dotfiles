@@ -6,7 +6,7 @@ The `init` script puts symlinks in all the right places.
 
 # Hi what are you doing here
 
-So a while ago I wrote [a blog post about a tool I wrote called `sd`][post]. At the time, `sd` only existed in my dotfiles, and the post linked here. But since then, I promotod to its own repository:
+So a while ago I wrote [a blog post about a tool I wrote called `sd`][post]. At the time, `sd` only existed in my dotfiles, and the post linked here. But since then, I promoted it to its own repository:
 
 https://github.com/ianthehenry/sd
 
