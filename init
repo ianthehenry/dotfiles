@@ -19,7 +19,7 @@ for path in bin/sd bin/completions/_sd; do
 done
 
 mkdir -p "$HOME/sd"
-for file in "$PWD"/sd-common/*; do
+for file in "$HOME"/src/sd/sdefaults/*; do
   if [[ ! -s "$HOME/sd/$(basename "$file")" ]]; then
     ln -s "$file" "$HOME/sd/$(basename "$file")"
   fi
