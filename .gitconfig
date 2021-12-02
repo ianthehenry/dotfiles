@@ -33,7 +33,7 @@
 [alias]
   git = !git
   ff = merge --ff-only @{u}
-  hist = log --oneline --decorate --graph --topo-order
+  hist = log --format='%C(yellow)%h %C(blue)%as%C(auto)%d%Creset %s %C(dim)[%an, %ar]' --graph --topo-order
   st = status --short --branch
   com = commit
   heads = for-each-ref --sort=-committerdate refs/heads/ --format='%(committerdate:short) %(authorname) %(refname:short)'
