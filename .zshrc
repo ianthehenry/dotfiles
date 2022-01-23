@@ -1,39 +1,70 @@
-ZSH="$HOME/.oh-my-zsh"
-HYPHEN_INSENSITIVE="true"
-DISABLE_LS_COLORS="true"
-COMPLETION_WAITING_DOTS="true"
-plugins=(zsh-syntax-highlighting)
-fpath=(~/bin/completions $fpath)
+fpath+=(~/src/sd ~/.nix-profile/share/zsh/site-functions)
 # This must be separate for (at least) zsh 5.0.2...
 export fpath
 
-source "$ZSH/oh-my-zsh.sh"
-
 # use a nonbreaking space so that i can scroll to the end of an
 # empty prompt line in tmux
-export PS1=$'%{$fg[blue]%}${PWD/#$HOME/~} ➜\U00A0%{$reset_color%}'
-export PS2=$'%_ ➜\U00A0'
+export PS1=$'%F{blue}%~ ➜\U00A0%f'
+export PS2=$'%F{blue}%_ ➜\U00A0%f'
 
 if [[ -n "$IN_NIX_SHELL" ]]; then
   label="nix-shell"
   if [[ "$name" != "$label" ]]; then
     label="$label:$name"
   fi
-  export PS1=$'%{$fg[green]%}'"$label $PS1"
+  export PS1="%F{green}$label $PS1"
   unset label
 fi
 
-# just print a backslash instead of a % or a # character after partial lines
+# completion
+
+autoload -U compinit
+compinit
+
+setopt menu_complete
+setopt auto_menu
+setopt complete_in_word
+setopt always_to_end
+zstyle ':completion:*' menu select
+
+# history
+
+setopt extended_history       # record timestamp of command in HISTFILE
+setopt hist_expire_dups_first # delete duplicates first when HISTFILE size exceeds HISTSIZE
+setopt hist_ignore_dups       # ignore duplicated commands history list
+setopt hist_ignore_space      # ignore commands that start with space
+setopt share_history          # share command history data
+
+# general interaction stuff
+
+WORDCHARS=''
+setopt extendedglob
+setopt interactivecomments
+setopt long_list_jobs
+setopt auto_cd
+setopt auto_pushd
+setopt pushd_ignore_dups
+setopt pushdminus
+
+# print a backslash instead of a % or a # character after partial lines
 export PROMPT_EOL_MARK='%S\%s'
 
-unsetopt HIST_VERIFY
-setopt extendedglob
-
-setopt menucomplete
-
+export PAGER=less
+export LESS='-R -S'
 export VISUAL="subl -w"
 
+source ~/.zsh_plugins/zsh-autoquoter/zsh-autoquoter.plugin.zsh
+source ~/.zsh_plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh
+
+ZAQ_PREFIXES=('git commit -m')
+ZSH_HIGHLIGHT_HIGHLIGHTERS+=(zaq)
+
 export NIX_BUILD_SHELL=$HOME/src/nix-zshell/result
+
+alias -g ...='../..'
+alias -g ....='../../..'
+alias -g .....='../../../..'
+alias -g ......='../../../../..'
 
 alias ls='ls -Fx'
 alias la='ls -AFx'
