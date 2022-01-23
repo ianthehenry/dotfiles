@@ -15,7 +15,7 @@ with import <nixpkgs> {}; [
   mercurial
   nasm
   ngrok
-  nix
+  nix_2_3
   nmap
   nodejs
   opam
@@ -27,9 +27,9 @@ with import <nixpkgs> {}; [
   rbenv
   ripgrep
   ruby
-  rustracer
   sqlite
   stack
+  syncthing
   terminal-notifier
   tmux
   tree
