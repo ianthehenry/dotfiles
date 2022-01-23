@@ -15,4 +15,4 @@ TAGS
 .tags
 .stack-work
 npm-debug.log
-.nix-gc-roots
+.nix-shell-inputs
