@@ -26,6 +26,9 @@ setopt auto_menu
 setopt complete_in_word
 setopt always_to_end
 zstyle ':completion:*' menu select
+zstyle ':completion:*' accept-exact-dirs true
+
+bindkey "${terminfo[kcbt]}" reverse-menu-complete # shift-tab
 
 # history
 
