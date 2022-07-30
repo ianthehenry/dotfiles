@@ -5,7 +5,6 @@
 	],
 	"installed_packages":
 	[
-		"Color Highlighter",
 		"Nix",
 		"OpenGL Shading Language (GLSL)",
 		"Package Control",

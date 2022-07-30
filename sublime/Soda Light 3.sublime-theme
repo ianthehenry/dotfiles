@@ -1,0 +1,25 @@
+// Documentation at https://www.sublimetext.com/docs/themes.html
+{
+  "variables":
+  {
+  },
+  "rules":
+  [
+    {
+        "class": "tab_label",
+        "shadow_offset": [0, 0],
+    },
+    {
+        "class": "sidebar_heading",
+        "shadow_offset": [0, 0],
+    },
+    {
+        "class": "sidebar_label",
+        "shadow_offset": [0, 0],
+    },
+    { 
+        "class": "label_control",
+        "shadow_offset": [0, 0],
+    }
+  ]
+}

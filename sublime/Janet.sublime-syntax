@@ -1,0 +1,110 @@
+%YAML 1.2
+---
+# http://www.sublimetext.com/docs/3/syntax.html
+name: Janet
+file_extensions:
+  - janet
+scope: source.janet
+contexts:
+  main:
+    - include: all
+  comment:
+    - match: (#).*$
+      scope: comment.line.janet
+      captures:
+        1: punctuation.definition.comment.janet
+  all:
+    - include: comment
+    - include: parens
+    - include: brackets
+    - include: braces
+    - include: readermac
+    - include: string
+    - include: longstring
+    - include: literal
+    - include: corelib
+    - include: r-number
+    - include: dec-number
+    - include: hex-number
+    - include: keysym
+    - include: symbol
+  braces:
+    - match: "(@?{)"
+      captures:
+        1: punctuation.definition.braces.end.janet
+      push:
+        - match: "(})"
+          captures:
+            1: punctuation.definition.braces.end.janet
+          pop: true
+        - include: all
+  brackets:
+    - match: '(@?\[)'
+      captures:
+        1: punctuation.definition.brackets.end.janet
+      push:
+        - match: '(\])'
+          captures:
+            1: punctuation.definition.brackets.end.janet
+          pop: true
+        - include: all
+  corelib:
+    - match: '(?<![\.:\w_\-=!@\$%^&?/<>*])(break|def|do|var|set|fn|while|if|quote|quasiquote|unquote|splice|%|%=|\*|\*=|\+|\+\+|\+=|\-|\-\-|\-=|\->|\->>|\-\?>|\-\?>>|/|/=|<|<=|=|>|>=|abstract\?|accumulate|accumulate2|all|all\-bindings|all\-dynamics|and|any\?|apply|array|array/concat|array/ensure|array/fill|array/insert|array/new|array/new\-filled|array/peek|array/pop|array/push|array/remove|array/slice|array/trim|array\?|as\->|as\?\->|asm|assert|bad\-compile|bad\-parse|band|blshift|bnot|boolean\?|bor|brshift|brushift|buffer|buffer/bit|buffer/bit\-clear|buffer/bit\-set|buffer/bit\-toggle|buffer/blit|buffer/clear|buffer/fill|buffer/format|buffer/new|buffer/new\-filled|buffer/popn|buffer/push\-byte|buffer/push\-string|buffer/push\-word|buffer/slice|buffer/trim|buffer\?|bxor|bytes\?|case|cfunction\?|chr|cli\-main|cmp|comment|comp|compare|compare<|compare<=|compare=|compare>|compare>=|compile|complement|comptime|cond|coro|count|debug|debug/arg\-stack|debug/break|debug/fbreak|debug/lineage|debug/stack|debug/stacktrace|debug/step|debug/unbreak|debug/unfbreak|debugger\-env|dec|deep\-not=|deep=|def\-|default|default\-peg\-grammar|defer|defglobal|defmacro|defmacro\-|defn|defn\-|describe|dictionary\?|disasm|distinct|doc|doc\*|doc\-format|dofile|drop|drop\-until|drop\-while|dyn|each|eachk|eachp|eachy|edefer|eflush|empty\?|env\-lookup|eprin|eprinf|eprint|eprintf|error|errorf|eval|eval\-string|even\?|every\?|extreme|false\?|fiber/can\-resume\?|fiber/current|fiber/getenv|fiber/maxstack|fiber/new|fiber/root|fiber/setenv|fiber/setmaxstack|fiber/status|fiber\?|file/close|file/flush|file/open|file/popen|file/read|file/seek|file/temp|file/write|filter|find|find\-index|first|flatten|flatten\-into|flush|for|forever|forv|freeze|frequencies|function\?|gccollect|gcinterval|gcsetinterval|generate|gensym|get|get\-in|getline|hash|idempotent\?|identity|if\-let|if\-not|if\-with|import|import\*|in|inc|indexed\?|int/s64|int/u64|int\?|interleave|interpose|invert|janet/build|janet/config\-bits|janet/version|juxt|juxt\*|keep|keys|keyword|keyword/slice|keyword\?|kvs|label|last|length|let|load\-image|load\-image\-dict|loop|macex|macex1|make\-env|make\-image|make\-image\-dict|map|mapcat|marshal|match|math/\-inf|math/abs|math/acos|math/acosh|math/asin|math/asinh|math/atan|math/atan2|math/atanh|math/cbrt|math/ceil|math/cos|math/cosh|math/e|math/erf|math/erfc|math/exp|math/exp2|math/expm1|math/floor|math/gamma|math/hypot|math/inf|math/int\-max|math/int\-min|math/int32\-max|math/int32\-min|math/log|math/log10|math/log1p|math/log2|math/nan|math/next|math/pi|math/pow|math/random|math/rng|math/rng\-buffer|math/rng\-int|math/rng\-uniform|math/round|math/seedrandom|math/sin|math/sinh|math/sqrt|math/tan|math/tanh|math/trunc|max|mean|merge|merge\-into|min|mod|module/add\-paths|module/cache|module/expand\-path|module/find|module/loaders|module/loading|module/paths|nan\?|nat\?|native|neg\?|net/chunk|net/close|net/connect|net/read|net/server|net/write|next|nil\?|not|not=|number\?|odd\?|one\?|or|os/arch|os/cd|os/chmod|os/clock|os/cryptorand|os/cwd|os/date|os/dir|os/environ|os/execute|os/exit|os/getenv|os/link|os/lstat|os/mkdir|os/mktime|os/perm\-int|os/perm\-string|os/readlink|os/realpath|os/rename|os/rm|os/rmdir|os/setenv|os/shell|os/sleep|os/stat|os/symlink|os/time|os/touch|os/umask|os/which|pairs|parse|parser/byte|parser/clone|parser/consume|parser/eof|parser/error|parser/flush|parser/has\-more|parser/insert|parser/new|parser/produce|parser/state|parser/status|parser/where|partial|partition|peg/compile|peg/find|peg/find\-all|peg/match|peg/replace|peg/replace\-all|pos\?|postwalk|pp|prewalk|prin|prinf|print|printf|product|prompt|propagate|protect|put|put\-in|quit|range|reduce|reduce2|repeat|repl|require|resume|return|reverse|reverse!|root\-env|run\-context|scan\-number|seq|setdyn|short\-fn|signal|slice|slurp|some|sort|sort\-by|sorted|sorted\-by|spit|stderr|stdin|stdout|string|string/ascii\-lower|string/ascii\-upper|string/bytes|string/check\-set|string/find|string/find\-all|string/format|string/from\-bytes|string/has\-prefix\?|string/has\-suffix\?|string/join|string/repeat|string/replace|string/replace\-all|string/reverse|string/slice|string/split|string/trim|string/triml|string/trimr|string\?|struct|struct\?|sum|symbol|symbol/slice|symbol\?|table|table/clone|table/getproto|table/new|table/rawget|table/setproto|table/to\-struct|table\?|take|take\-until|take\-while|tarray/buffer|tarray/copy\-bytes|tarray/length|tarray/new|tarray/properties|tarray/slice|tarray/swap\-bytes|thread/close|thread/current|thread/exit|thread/new|thread/receive|thread/send|trace|tracev|true\?|truthy\?|try|tuple|tuple/brackets|tuple/setmap|tuple/slice|tuple/sourcemap|tuple/type|tuple\?|type|unless|unmarshal|untrace|update|update\-in|use|values|var\-|varfn|varglobal|walk|when|when\-let|when\-with|with|with\-dyns|with\-syms|with\-vars|yield|zero\?|zipcoll)(?![\.:\w_\-=!@\$%^&?/<>*])'
+      scope: keyword.control.janet
+  dec-number:
+    - match: '(?<![\.:\w_\-=!@\$%^&?/<>*])[-+]?([_\d]+|[_\d]+\.[_\d]*|\.[_\d]+)([eE&][+-]?[\d]+)?(?![\.:\w_\-=!@\$%^&?/<>*])'
+      scope: constant.numeric.decimal.janet
+  hex-number:
+    - match: '(?<![\.:\w_\-=!@\$%^&?/<>*])[-+]?0x([_\da-fA-F]+|[_\da-fA-F]+\.[_\da-fA-F]*|\.[_\da-fA-F]+)(&[+-]?[\da-fA-F]+)?(?![\.:\w_\-=!@\$%^&?/<>*])'
+      scope: constant.numeric.hex.janet
+  keysym:
+    - match: '(?<![\.:\w_\-=!@\$%^&?/<>*]):[\.:\w_\-=!@\$%^&?/<>*]*'
+      scope: constant.keyword.janet
+  literal:
+    - match: '(?<![\.:\w_\-=!@\$%^&?/<>*])(true|false|nil)(?![\.:\w_\-=!@\$%^&?/<>*])'
+      scope: constant.language.janet
+  longstring:
+    - match: (@?)(`+)
+      captures:
+        1: punctuation.definition.string.begin.janet
+        2: punctuation.definition.string.begin.janet
+      push:
+        - meta_scope: string.quoted.triple.janet
+        - match: \2
+          captures:
+            1: punctuation.definition.string.end.janet
+          pop: true
+  nomatch:
+    - match: \S+
+      scope: invalid.illegal.janet
+  parens:
+    - match: (@?\()
+      captures:
+        1: punctuation.definition.parens.end.janet
+      push:
+        - match: (\))
+          captures:
+            1: punctuation.definition.parens.end.janet
+          pop: true
+        - include: all
+  r-number:
+    - match: '(?<![\.:\w_\-=!@\$%^&?/<>*])[-+]?\d\d?r([_\w]+|[_\w]+\.[_\w]*|\.[_\w]+)(&[+-]?[\w]+)?(?![\.:\w_\-=!@\$%^&?/<>*])'
+      scope: constant.numeric.decimal.janet
+  readermac:
+    - match: '[\''\~\;\,]'
+      scope: punctuation.other.janet
+  string:
+    - match: (@?")
+      captures:
+        1: punctuation.definition.string.begin.janet
+      push:
+        - meta_scope: string.quoted.double.janet
+        - match: (")
+          captures:
+            1: punctuation.definition.string.end.janet
+          pop: true
+        - match: '(\\[nevr0zft"\\'']|\\x[0-9a-fA-F]{2}|\\u[0-9a-fA-F]{4}|\\U[0-9a-fA-F]{6})'
+          scope: constant.character.escape.janet
+  symbol:
+    - match: '(?<![\.:\w_\-=!@\$%^&?/<>*])[\.a-zA-Z_\-=!@\$%^&?/<>*][\.:\w_\-=!@\$%^&?/<>*]*'
+      scope: variable.other.janet
