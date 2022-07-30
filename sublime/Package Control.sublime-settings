@@ -5,10 +5,13 @@
 	],
 	"installed_packages":
 	[
+		"Color Highlighter",
 		"Nix",
+		"OpenGL Shading Language (GLSL)",
 		"Package Control",
-		"Solarized Toggle",
 		"Theme - Soda",
 		"ToggleQuotes",
+		"TOML",
+		"Typewriter",
 	],
 }
