@@ -16,3 +16,4 @@ TAGS
 .stack-work
 npm-debug.log
 .nix-shell-inputs
+jpm_tree/

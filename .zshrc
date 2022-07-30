@@ -56,12 +56,13 @@ export PROMPT_EOL_MARK='%S\%s'
 export PAGER=less
 export LESS='-R -S'
 export VISUAL="subl -w"
+export SD_EDITOR="subl"
 
 source ~/.zsh_plugins/zsh-autoquoter/zsh-autoquoter.plugin.zsh
 source ~/.zsh_plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh
 source ~/.zsh_plugins/zsh-expander/zsh-expander.plugin.zsh
 
-ZAQ_PREFIXES=('git commit( [^ ]##)# -[^ -]#m' 'ssh( [^ ]##)# [^ -][^ ]#' 'sd [^ ]* --new')
+ZAQ_PREFIXES=('git commit( [^ ]##)# -[^ -]#m' 'ssh( [^ ]##)# [^ -][^ ]#' 'sd [^ ]* --new' 'note' 'todo')
 ZSH_HIGHLIGHT_HIGHLIGHTERS+=(zaq)
 
 export NIX_BUILD_SHELL=$HOME/src/nix-zshell/result

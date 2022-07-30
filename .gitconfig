@@ -5,6 +5,8 @@
   editor = "subl --wait"
   excludesfile = "~/.gitignore_global"
   pager = delta
+[pager]
+  log = less -S
 [diff]
   algorithm = patience
   colorMoved = default
