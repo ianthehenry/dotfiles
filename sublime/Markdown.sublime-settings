@@ -3,5 +3,6 @@
   "word_wrap": true,
   "wrap_width": 80,
   "rulers": [80],
-  "highlight_line": false
+  "highlight_line": false,
+  "typewriter_mode_scrolling" : true,
 }
