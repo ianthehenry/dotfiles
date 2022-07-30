@@ -12,19 +12,6 @@ done
 
 mkdir -p "$HOME/bin/completions"
 
-for path in bin/sd bin/completions/_sd; do
-  if [[ ! -s "$HOME/$path" ]]; then
-    ln -s {"$PWD","$HOME"}/"$path"
-  fi
-done
-
-mkdir -p "$HOME/sd"
-for file in "$HOME"/src/sd/sdefaults/*; do
-  if [[ ! -s "$HOME/sd/$(basename "$file")" ]]; then
-    ln -s "$file" "$HOME/sd/$(basename "$file")"
-  fi
-done
-
 if [[ ! -e "$HOME/.emacs.d" ]]; then
   git clone --recursive https://github.com/syl20bnr/spacemacs "$HOME/.emacs.d"
 fi
