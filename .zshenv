@@ -3,8 +3,7 @@ function addpath {
 }
 
 if [[ -z "$IN_NIX_SHELL" ]]; then
-  PATH=""
-  addpath "$HOME/bin"
+  PATH="$HOME/bin"
   addpath "./node_modules/.bin"
   addpath "/usr/local/bin"
   addpath "/usr/local/sbin"
