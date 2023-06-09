@@ -5,6 +5,7 @@ function addpath {
 if [[ -z "$IN_NIX_SHELL" ]]; then
   PATH="$HOME/bin"
   addpath "./node_modules/.bin"
+  addpath "./jpm_tree/bin"
   addpath "/usr/local/bin"
   addpath "/usr/local/sbin"
   addpath "/usr/bin"
