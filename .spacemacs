@@ -510,18 +510,37 @@ forward-symbol when you have a visual selection."
     (when (eq start (point))
       (beginning-of-line))))
 
-(defvar ian/selected-janet-tests nil)
+(defun ian/get-janet-project-root (dir)
+  (cond
+   ((string-equal dir "/") nil)
+   ((file-exists-p (file-name-concat dir "project.janet")) dir)
+   ((ian/get-janet-project-root (file-name-directory (directory-file-name dir))))))
+
+(defvar ian/selected-janet-test-marker nil)
+
+(defun ian/selected-test-filename ()
+   (with-current-buffer (marker-buffer ian/selected-janet-test-marker)
+     buffer-file-name))
+
+(defun ian/selected-project-root ()
+  (ian/get-janet-project-root
+    (file-name-directory (ian/selected-test-filename))))
+
+(defun ian/selected-test-selector (project-root)
+  (let ((marker ian/selected-janet-test-marker))
+    (with-current-buffer (marker-buffer marker)
+      (let ((pos (marker-position marker)))
+        (save-excursion
+          (goto-char pos)
+          (format "%s:%d:%d"
+                  (file-relative-name buffer-file-name project-root)
+                  (line-number-at-pos)
+                  (current-column)))))))
 
 (defun ian/janet-test-select ()
   (interactive)
-  (let* ((line (line-number-at-pos (point)))
-        (col (current-column))
-        (filename buffer-file-name)
-        (selector (format "%s:%d:%d" filename line col)))
-
-    (setq ian/selected-janet-tests (list filename selector))
-    (message "selected test: %s" selector)
-    ))
+  (setq ian/selected-janet-test-marker (point-marker))
+  (message "selected test: %s" (ian/selected-test-selector (ian/selected-project-root))))
 
 (defun ian/escape-shell-command (&rest args)
   (string-join (--map (shell-quote-argument it) args) " "))
@@ -535,10 +554,13 @@ forward-symbol when you have a visual selection."
 
 (defun ian/run-judge (on-exit &rest args)
   (let*
-      ((filename (car ian/selected-janet-tests))
-       (test-selectors (cdr ian/selected-janet-tests))
-       (selector-args (--mapcat (list "--at" it) test-selectors))
-       (command (apply 'ian/escape-shell-command "janet" filename (append selector-args args))))
+      ((filename (ian/selected-test-filename))
+       (project-dir (ian/selected-project-root))
+       (default-directory project-dir)
+       (test-selectors (list (ian/selected-test-selector project-dir)))
+       (selector-args (--map (file-relative-name it project-dir) test-selectors))
+       (command (apply 'ian/escape-shell-command (file-name-concat project-dir "jpm_tree/bin/judge")
+                       (append selector-args args))))
     (save-window-excursion
       (let* ((output-buffer (generate-new-buffer "*judge-output*"))
              (process (progn
@@ -551,7 +573,9 @@ forward-symbol when you have a visual selection."
 (defun ian/janet-test-run ()
   (interactive)
 
-  (when (null ian/selected-janet-tests)
+  (call-interactively 'save-buffer)
+
+  (when (null ian/selected-janet-test-marker)
     (call-interactively 'ian/janet-test-select))
 
   (ian/run-judge
@@ -570,7 +594,7 @@ forward-symbol when you have a visual selection."
              (erase-buffer)
              (insert "all tests passed"))
            (progn
-             (diff-no-select filename (concat filename ".corrected") nil t diff-buffer)
+             (diff-no-select filename (concat filename ".tested") nil t diff-buffer)
              (display-buffer diff-buffer)))
        (with-current-buffer diff-buffer
          ; i don't know what sets this in the first place
@@ -613,13 +637,13 @@ forward-symbol when you have a visual selection."
 (defun ian/janet-test-accept ()
   (interactive)
   (if-let ((test-filename (car ian/selected-janet-tests)))
-      (let ((corrected-filename (concat test-filename ".corrected")))
+      (let ((corrected-filename (concat test-filename ".tested")))
         (if (file-exists-p corrected-filename)
             (progn
               (rename-file corrected-filename test-filename t)
               (when (string= buffer-file-name test-filename)
                 (ian/revert-with-highlight)))
-          (message "no .corrected file found")))
+          (message "no .tested file found")))
     (message "no test selected")))
 
 (defun ian/janet-test-run-and-accept ()
@@ -706,6 +730,12 @@ you should place your code here."
             (lambda ()
               (setq-local comment-auto-fill-only-comments t)
               (turn-on-auto-fill)))
+
+  (add-hook 'janet-mode-hook
+            (lambda ()
+              (setq-local indent-line-function #'indent-relative)
+              ;(setq-local lisp-indent-function nil)
+            ))
 
   (spacemacs/set-leader-keys-for-major-mode 'janet-mode "ts" 'ian/janet-test-select)
   (spacemacs/set-leader-keys-for-major-mode 'janet-mode "tr" 'ian/janet-test-run)
