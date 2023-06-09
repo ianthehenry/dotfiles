@@ -1,13 +1,14 @@
+let flip = f: x: y: f y x; in
 let overridePackageAttrs = overrides: pkgs:
-  let update = with pkgs.lib; (flip recursiveUpdate); in
-  pkgs.lib.mapAttrs (packageName: attrsOrUpdater:
-    let updater =
-      if builtins.isAttrs attrsOrUpdater
-      then update attrsOrUpdater
-      else attrsOrUpdater;
+  flip pkgs.lib.mapAttrs overrides (packageName: spec:
+    let inputOverrides = (spec.inputs or (pkgs: {})) pkgs; in
+    let attrOverrides = (spec.attrs or (pkgs: {})) pkgs; in
+    let attrUpdater =
+      if builtins.isAttrs attrOverrides
+      then flip pkgs.lib.recursiveUpdate attrOverrides
+      else attrOverrides;
     in
-    pkgs.${packageName}.overrideAttrs updater)
-    overrides;
+    (pkgs.${packageName}.override inputOverrides).overrideAttrs attrUpdater);
 in
 let
   tab = "\t"; 
