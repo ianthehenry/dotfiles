@@ -42,9 +42,8 @@ values."
      markdown
      neotree
      nginx
-     ocaml
+     ;ocaml
      org
-     php
      purescript
      python
      ruby
@@ -320,95 +319,20 @@ values."
    ;; delete only whitespace for changed lines or `nil' to disable cleanup.
    ;; (default nil)
    dotspacemacs-whitespace-cleanup nil
-
-(defun dotspacemacs/user-env ()
-  "Environment variables setup.
-This function defines the environment variables for your Emacs session. By
-default it calls `spacemacs/load-spacemacs-env' which loads the environment
-variables declared in `~/.spacemacs.env' or `~/.spacemacs.d/.spacemacs.env'.
-See the header of this file for more information."
-  (spacemacs/load-spacemacs-env))
-
-(defun dotspacemacs/user-init ()
-  "Initialization for user code:
-This function is called immediately after `dotspacemacs/init', before layer
-configuration.
-It is mostly for variables that should be set before packages are loaded.
-If you are unsure, try setting them in `dotspacemacs/user-config' first."
-  (setq auto-completion-private-snippets-directory "~/local/snippets")
-  (setq evil-search-module 'evil-search)
-  )
-
-(defun dotspacemacs/user-load ()
-  "Library to load while dumping.
-This function is called only while dumping Spacemacs configuration. You can
-`require' or `load' the libraries of your choice that will be included in the
-dump."
-  )
-
-(defun ian/fit-other-window (dir)
-  (let ((other-window (windmove-find-other-window dir)))
-    (cond ((null other-window)
-           (error "No window %s from selected window" dir))
-          ((and (window-minibuffer-p other-window)
-                (not (minibuffer-window-active-p other-window)))
-           (error "Minibuffer is inactive"))
-          (t (fit-window-to-buffer other-window)))))
-
-(defun ian/fit-window-left ()
-  (interactive)
-  (ian/fit-other-window 'left))
-
-(defun ian/fit-window-right ()
-  (interactive)
-  (ian/fit-other-window 'right))
-
-(defun ian/fit-window-up ()
-  (interactive)
-  (ian/fit-other-window 'up))
-
-(defun ian/fit-window-down ()
-  (interactive)
-  (ian/fit-other-window 'down))
-
-(defun ian/fit-window-by-number (i)
-  (let* ((window (winum-get-window-by-number i)))
-    (if window
-        (fit-window-to-buffer window)
-      (error "No window numbered %s" i))))
-
-(dotimes (i 10)
-  (eval `(defun ,(intern (format "ian/fit-window-%s" i)) ()
-           ,(format "Select the window with number %i." i)
-           (interactive)
-           (ian/fit-window-by-number ,i))))
-
-(defmacro comment (&rest body)
-  "Comment out one or more s-expressions."
-  nil)
-
-;; these evil-define functions are not actually available yet...
-(comment
-;; For some reason, you have to use evil-define-motion. defun doesn't work.
-(evil-define-motion ian/evil-visual-line ()
-  (interactive)
-  (cond
-   ((eq (evil-visual-type) 'line) (call-interactively #'evil-next-line))
-   (t (call-interactively #'evil-visual-line))
    ))
 
-(evil-define-command ian/insert-char (count char)
-  (interactive "<c><C>")
-  (setq count (or count 1))
-  (save-excursion
-    (insert (make-string count char))
-    ))
-
-(evil-define-command ian/change-to-one-char (char)
-  (interactive "<C>")
-  (call-interactively 'evil-delete)
-  (save-excursion
-    (insert (make-string 1 char)))))
+;(evil-define-command ian/insert-char (count char)
+;  (interactive "<c><C>")
+;  (setq count (or count 1))
+;  (save-excursion
+;    (insert (make-string count char))
+;    ))
+;
+;(evil-define-command ian/change-to-one-char (char)
+;  (interactive "<C>")
+;  (call-interactively 'evil-delete)
+;  (save-excursion
+;    (insert (make-string 1 char))))
 
 (defun ian/fix-evil-stuff ()
   ;; there's probably some evil-define macro thing that I could do that
@@ -707,6 +631,18 @@ forward-symbol when you have a visual selection."
   (ian/run-judge
    (lambda (output-buffer filename exit-status)
      (ian/janet-test-accept))))
+
+(defun dotspacemacs/user-init ()
+  "Initialization function for user code.
+It is called immediately after `dotspacemacs/init', before layer configuration
+executes.
+ This function is mostly useful for variables that need to be set
+before packages are loaded. If you are unsure, you should try in setting them in
+`dotspacemacs/user-config' first."
+  (setq auto-completion-private-snippets-directory "~/local/snippets")
+  (setq evil-search-module 'evil-search))
+
+(defmacro comment (&rest _) nil)
 
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
