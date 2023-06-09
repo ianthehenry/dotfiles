@@ -1,6 +1,3 @@
-fpath+=(~/src/sd ~/.nix-profile/share/zsh/site-functions)
-# This must be separate for (at least) zsh 5.0.2...
-export fpath
 
 # use a nonbreaking space so that i can scroll to the end of an
 # empty prompt line in tmux
@@ -18,6 +15,7 @@ fi
 
 # completion
 
+fpath+=(~/src/sd ~/.nix-profile/share/zsh/site-functions)
 autoload -U compinit
 compinit
 
