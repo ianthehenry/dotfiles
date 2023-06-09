@@ -60,7 +60,7 @@ source ~/.zsh_plugins/zsh-autoquoter/zsh-autoquoter.plugin.zsh
 source ~/.zsh_plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh
 source ~/.zsh_plugins/zsh-expander/zsh-expander.plugin.zsh
 
-ZAQ_PREFIXES=('git commit( [^ ]##)# -[^ -]#m' 'ssh( [^ ]##)# [^ -][^ ]#' 'sd [^ ]* --new' 'note' 'todo')
+ZAQ_PREFIXES=('git commit( [^ ]##)# -[^ -]#m' 'ssh( [^ ]##)# [^ -][^ ]#' 'sd [^ ]* --new' 'note' 'to do' 'to did')
 ZSH_HIGHLIGHT_HIGHLIGHTERS+=(zaq)
 
 export NIX_BUILD_SHELL=$HOME/src/nix-zshell/result
