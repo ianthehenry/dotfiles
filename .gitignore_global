@@ -17,3 +17,9 @@ TAGS
 npm-debug.log
 .nix-shell-inputs
 jpm_tree/
+node_modules/
+yarn-error.log
+yalc.lock
+.yalc
+*.orig
+diary.md
