@@ -94,3 +94,9 @@ jf() {
 
 # opam configuration
 test -r /Users/ian/.opam/opam-init/init.zsh && . /Users/ian/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
+
+export DIRENV_LOG_FORMAT="$(printf "\033[2mdirenv: %%s\033[0m")"
+eval "$(direnv hook zsh)"
+_direnv_hook() {
+  eval "$(direnv export zsh 2> >(egrep -v -e '^....direnv: export' >&2))"
+};

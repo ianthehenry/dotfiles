@@ -23,3 +23,5 @@ yalc.lock
 .yalc
 *.orig
 diary.md
+.envrc
+.direnv/
