@@ -519,28 +519,38 @@ forward-symbol when you have a visual selection."
 (defvar ian/selected-janet-test-marker nil)
 
 (defun ian/selected-test-filename ()
-   (with-current-buffer (marker-buffer ian/selected-janet-test-marker)
-     buffer-file-name))
+  (if (null ian/selected-janet-test-marker)
+    buffer-file-name
+    (with-current-buffer (marker-buffer ian/selected-janet-test-marker)
+      buffer-file-name)))
 
-(defun ian/selected-project-root ()
-  (ian/get-janet-project-root
-    (file-name-directory (ian/selected-test-filename))))
+(defun ian/selected-test-selector ()
+  (if (null ian/selected-janet-test-marker)
+    buffer-file-name
+    (let ((marker ian/selected-janet-test-marker))
+      (with-current-buffer (marker-buffer marker)
+        (let ((pos (marker-position marker)))
+          (save-excursion
+            (goto-char pos)
+            (format "%s:%d:%d"
+                    buffer-file-name
+                    (line-number-at-pos)
+                    (+ (current-column) 1) ; judge expects both lines and cols to be 1-indexed
+                    )))))))
 
-(defun ian/selected-test-selector (project-root)
-  (let ((marker ian/selected-janet-test-marker))
-    (with-current-buffer (marker-buffer marker)
-      (let ((pos (marker-position marker)))
-        (save-excursion
-          (goto-char pos)
-          (format "%s:%d:%d"
-                  (file-relative-name buffer-file-name project-root)
-                  (line-number-at-pos)
-                  (current-column)))))))
+(defun ian/janet-test-clear-selection ()
+  (interactive)
+  (setq ian/selected-janet-test-marker nil)
+  (message "cleared test selection"))
 
 (defun ian/janet-test-select ()
   (interactive)
   (setq ian/selected-janet-test-marker (point-marker))
-  (message "selected test: %s" (ian/selected-test-selector (ian/selected-project-root))))
+  (message "selected test: %s"
+           (file-relative-name
+            (ian/selected-test-selector)
+            (ian/get-janet-project-root
+             (directory-file-name (ian/selected-test-filename))))))
 
 (defun ian/escape-shell-command (&rest args)
   (string-join (--map (shell-quote-argument it) args) " "))
@@ -552,56 +562,63 @@ forward-symbol when you have a visual selection."
       ; (shell-command-sentinel process signal)
       )))
 
-(defun ian/run-judge (on-exit &rest args)
+(defun ian/run-judge (filename test-selectors on-exit &rest args)
   (let*
-      ((filename (ian/selected-test-filename))
-       (project-dir (ian/selected-project-root))
-       (default-directory project-dir)
-       (test-selectors (list (ian/selected-test-selector project-dir)))
+      ((project-dir (ian/get-janet-project-root (file-name-directory filename)))
        (selector-args (--map (file-relative-name it project-dir) test-selectors))
-       (command (apply 'ian/escape-shell-command (file-name-concat project-dir "jpm_tree/bin/judge")
-                       (append selector-args args))))
-    (save-window-excursion
-      (let* ((output-buffer (generate-new-buffer "*judge-output*"))
-             (process (progn
-                     (async-shell-command command output-buffer)
-                     (get-buffer-process output-buffer)))
-             (sentinel (ian/make-process-sentinel (apply-partially on-exit output-buffer filename))))
+       (args (cons (file-name-concat project-dir "jpm_tree/bin/judge") (append selector-args args))))
+    (let ((output-buffer (get-buffer-create "*Verdict*")))
+      (if-let ((existing-proc (get-buffer-process output-buffer)))
+          (kill-process existing-proc))
+      (with-current-buffer output-buffer
+        (erase-buffer)
+        ; beginning-of-buffer doesn't work if the first chars are invisible,
+        ; or something. so we make sure there's some text at the beginning
+        ; that we can definitely select
+        (insert "\n")
+        (shell-mode))
+      (display-buffer output-buffer)
+      (let ((process (apply #'start-process "judge" output-buffer args))
+            (sentinel (ian/make-process-sentinel (apply-partially on-exit output-buffer filename))))
+        (set-process-filter process 'comint-output-filter)
         (when (process-live-p process)
           (set-process-sentinel process sentinel))))))
 
-(defun ian/janet-test-run ()
+(defun ian/janet-accept (test-filename)
+  (let ((corrected-filename (concat test-filename ".tested")))
+    (if (file-exists-p corrected-filename)
+        (progn
+          (message "rename %s" buffer-file-name)
+          (rename-file corrected-filename test-filename t)
+          (when (string= buffer-file-name test-filename)
+            (ian/revert-with-highlight)))
+      (message "%s not found" corrected-filename))))
+
+(defun ian/janet-test-accept ()
   (interactive)
+  (ian/janet-accept (ian/selected-test-filename)))
 
-  (call-interactively 'save-buffer)
+(defun ian/diff-or-whatever (output-buffer filename exit-status)
+  (with-current-buffer output-buffer
+    (cond
+      ((= exit-status 0) (insert "all tests passed"))
+      ((= exit-status 1)
+       (erase-buffer)
+       (diff-no-select filename (concat filename ".tested") nil t (current-buffer)))
+      ((= exit-status 2) nil))
+    (whitespace-mode 0)
+    (setq buffer-read-only nil)
+    (dolist (window (get-buffer-window-list))
+      (fit-window-to-buffer window 10))))
 
-  (when (null ian/selected-janet-test-marker)
-    (call-interactively 'ian/janet-test-select))
-
-  (ian/run-judge
-   (lambda (output-buffer filename exit-status)
-     (with-current-buffer output-buffer
-       (goto-char (point-max))
-       (forward-line -1)
-       (message "%s" (string-trim (thing-at-point 'line)))
-       ; TODO: this should be configurable with the thing
-       ;(kill-buffer)
-       )
-     (let ((diff-buffer (get-buffer-create "*Verdict*")))
-       (if (zerop exit-status)
-           (with-current-buffer diff-buffer
-             (setq buffer-read-only nil)
-             (erase-buffer)
-             (insert "all tests passed"))
-           (progn
-             (diff-no-select filename (concat filename ".tested") nil t diff-buffer)
-             (display-buffer diff-buffer)))
-       (with-current-buffer diff-buffer
-         ; i don't know what sets this in the first place
-         (whitespace-mode 0)
-         (dolist (window (get-buffer-window-list))
-           (fit-window-to-buffer window)))
-       ))))
+(defun ian/janet-accept-or-report (output-buffer filename exit-status)
+  (when (= exit-status 1) (ian/janet-accept filename))
+  (with-current-buffer output-buffer
+    (display-buffer (current-buffer))
+    (dolist (window (get-buffer-window-list))
+      (fit-window-to-buffer window 10))
+    (beginning-of-buffer)
+    (evil-normal-state)))
 
 (defface ian/judge-flash-face
   '((((class color)) (:background "slate blue"))
@@ -634,27 +651,21 @@ forward-symbol when you have a visual selection."
                 (ian/flash region))))
           )))))
 
-(defun ian/janet-test-accept ()
+(defun ian/janet-test-run-and-diff ()
   (interactive)
-  (if-let ((test-filename (car ian/selected-janet-tests)))
-      (let ((corrected-filename (concat test-filename ".tested")))
-        (if (file-exists-p corrected-filename)
-            (progn
-              (rename-file corrected-filename test-filename t)
-              (when (string= buffer-file-name test-filename)
-                (ian/revert-with-highlight)))
-          (message "no .tested file found")))
-    (message "no test selected")))
+  (if (buffer-modified-p) (call-interactively 'save-buffer))
+  (ian/run-judge
+   (ian/selected-test-filename)
+   (list (ian/selected-test-selector))
+   #'ian/diff-or-whatever))
 
 (defun ian/janet-test-run-and-accept ()
   (interactive)
-
-  (when (null ian/selected-janet-tests)
-    (call-interactively 'ian/janet-test-select))
-
+  (if (buffer-modified-p) (call-interactively 'save-buffer))
   (ian/run-judge
-   (lambda (output-buffer filename exit-status)
-     (ian/janet-test-accept))))
+    (ian/selected-test-filename)
+    (list (ian/selected-test-selector))
+    #'ian/janet-accept-or-report))
 
 (defun dotspacemacs/user-init ()
   "Initialization function for user code.
@@ -731,16 +742,21 @@ you should place your code here."
               (setq-local comment-auto-fill-only-comments t)
               (turn-on-auto-fill)))
 
-  (add-hook 'janet-mode-hook
+  (add-hook 'smartparens-mode-hook
             (lambda ()
-              (setq-local indent-line-function #'indent-relative)
-              ;(setq-local lisp-indent-function nil)
-            ))
+              (sp-local-pair 'janet-mode "'" nil :actions nil)))
+
+  ;; (add-hook 'janet-mode-hook
+  ;;           (lambda ()
+  ;;             (setq-local indent-line-function #'indent-relative)
+  ;;             ;(setq-local lisp-indent-function nil)
+  ;;           ))
 
   (spacemacs/set-leader-keys-for-major-mode 'janet-mode "ts" 'ian/janet-test-select)
-  (spacemacs/set-leader-keys-for-major-mode 'janet-mode "tr" 'ian/janet-test-run)
+  (spacemacs/set-leader-keys-for-major-mode 'janet-mode "tc" 'ian/janet-test-clear-selection)
+  (spacemacs/set-leader-keys-for-major-mode 'janet-mode "tr" 'ian/janet-test-run-and-diff)
   (spacemacs/set-leader-keys-for-major-mode 'janet-mode "ta" 'ian/janet-test-accept)
-  (spacemacs/set-leader-keys-for-major-mode 'janet-mode "tR" 'ian/janet-test-run-and-accept)
+  (spacemacs/set-leader-keys-for-major-mode 'janet-mode "tt" 'ian/janet-test-run-and-accept)
 
   ;; this prevents emacs from prompting me every time I edit my .spacemacs file
   (setq vc-follow-symlinks nil)
